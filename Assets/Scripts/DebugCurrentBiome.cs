@@ -28,6 +28,6 @@ public class DebugCurrentBiome : MonoBehaviour
             }
         }
 
-        Debug.Log(biome);
+       // Debug.Log(biome);
     }
 }

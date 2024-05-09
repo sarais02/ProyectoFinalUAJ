@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 /// <summary>
 /// Generador de mapas Procedurales
@@ -509,10 +510,23 @@ public class MapGenerator : MonoBehaviour
         int indexX = Mathf.Clamp(Mathf.RoundToInt((x + topLeftX) - transform.position.x), 0, map.Size - 1);
         int indexY = Mathf.Clamp(Mathf.RoundToInt((-y + topLeftZ) + transform.position.z), 0, map.Size - 1);
 
-        Debug.Log("x: " + indexX + ", y: " + indexY);
+        //Debug.Log("x: " + indexX + ", y: " + indexY);
 
         return map.BiomeInfluences[indexX, indexY];
     }
+
+    public Vector3 GetGlobalPosition(Vector2 position)
+    {
+        float topLeftX = chunkSize / 2;
+        float topLeftZ = chunkSize / 2;
+
+        int indexX = Mathf.Clamp(Mathf.RoundToInt((position.x + topLeftX) - transform.position.x), 0, map.Size - 1);
+        int indexY = Mathf.Clamp(Mathf.RoundToInt((-position.y + topLeftZ) + transform.position.z), 0, map.Size - 1);
+
+
+        return new Vector3(indexX, Map.HeightMap[indexX, indexY], indexY);
+    }
+
 
     void GenerateObjects()
     {
