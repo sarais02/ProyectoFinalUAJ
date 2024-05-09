@@ -6,8 +6,6 @@ using static Unity.Burst.Intrinsics.X86;
 public class BotMovement : MonoBehaviour
 {
     public float view_Radius;
-    [Range(0, 360)]
-    public float view_Angle;
 
     public LayerMask targetMask; // layer de los bots
     public LayerMask obstacleMask; //layer de los obstaculos
@@ -20,8 +18,15 @@ public class BotMovement : MonoBehaviour
 
     [SerializeField]
     float velocity = 5f;
+    [SerializeField]
+    float gravity = 10f;
     Vector3 movemntToPosition;
+    Rigidbody rb;
 
+    [SerializeField]
+    float minDistInOneSec = 2f;
+    float distCheckRefreshSecs = 1f;
+    Vector3 lastPosCheck;
 
     //QUITAR
     public GameObject goToPoint;
@@ -29,66 +34,48 @@ public class BotMovement : MonoBehaviour
     private void Start()
     {
         movemntToPosition = default(Vector3);
-       
-        movemntToPosition = default(Vector3);
+        rb = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    private void FixedUpdate()
     {
         if (movemntToPosition == default(Vector3))
         {
             var pointOnMap = new Vector2(Random.Range(transform.position.x - view_Radius, transform.position.x + view_Radius),
-                Random.Range(transform.position.z - view_Radius, transform.position.z - view_Radius));
+                Random.Range(transform.position.z - view_Radius, transform.position.z + view_Radius));
+
             movemntToPosition = mapGenerator.GetGlobalPosition(pointOnMap);
-            Instantiate(goToPoint, movemntToPosition, Quaternion.identity); //QUITAR 
+            movemntToPosition.y += 0.5f;
+
+            CancelInvoke(nameof(CheckMovedInOneSec));
+            InvokeRepeating(nameof(CheckMovedInOneSec), distCheckRefreshSecs, distCheckRefreshSecs);
+
+            aux = Instantiate(goToPoint, movemntToPosition, Quaternion.identity); //QUITAR 
         }
-        else
+
+        // Calcula la dirección hacia el objetivo
+        Vector3 direccion = (movemntToPosition - transform.position).normalized;
+
+        // Mueve el objeto hacia el objetivo
+        rb.velocity = new Vector3((direccion * velocity).x, rb.velocity.y, (direccion*velocity).z);
+        rb.AddForce(new Vector3(0, -gravity, 0), ForceMode.Acceleration);
+
+        if (Vector3.Distance(transform.position, movemntToPosition) < 2f)
         {
-            // Calcula la dirección hacia el objetivo
-            Vector3 direccion = (movemntToPosition - transform.position).normalized;
-
-            // Calcula la cantidad de movimiento en este frame basado en la velocidad
-            float movimiento = velocity * Time.deltaTime;
-
-            // Mueve el objeto hacia el objetivo
-            transform.position += direccion * movimiento;
-
-            if (Vector3.Distance(transform.position, movemntToPosition) < 0.2f)
-            {
-                // Detener el movimiento si el objeto está lo suficientemente cerca del objetivo
-                GameObject.Destroy(aux); //QUITAR
-                movemntToPosition = default(Vector3);
-            }
+            // Detener el movimiento si el objeto está lo suficientemente cerca del objetivo
+            GameObject.Destroy(aux); //QUITAR
+            movemntToPosition = default(Vector3);
         }
-        
+
     }
 
-    void FindVisibleTargets()
+    void CheckMovedInOneSec()
     {
-        visibleTargets.Clear();
-        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, view_Radius, targetMask);
-
-        for (int i = 0; i < targetsInViewRadius.Length; i++)
+        if (Vector3.Distance(transform.position, lastPosCheck) < minDistInOneSec)
         {
-            Transform target = targetsInViewRadius[i].transform;
-            Vector3 dirToTarget = (target.position - transform.position).normalized;
-            if (Vector3.Angle(transform.forward, dirToTarget) < view_Angle / 2)
-            {
-                float dstToTarget = Vector3.Distance(transform.position, target.position);
-
-                if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
-                {
-                    visibleTargets.Add(target);
-                }
-            }
+            GameObject.Destroy(aux); //QUITAR
+            movemntToPosition = default(Vector3);
         }
-    }
-    public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
-    {
-        if (!angleIsGlobal)
-        {
-            angleInDegrees += transform.eulerAngles.y;
-        }
-        return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
+        lastPosCheck = transform.position;
     }
 }

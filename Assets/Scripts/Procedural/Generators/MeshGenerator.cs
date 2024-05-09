@@ -243,7 +243,6 @@ public static class MeshGenerator
         DrawTextureChunk(map, render, horBounds, verBounds);
     }
 
-
     public static void AddTriangle(List<int> triangles, ref int triangleIndex, int a, int b, int c)
     {
         triangles[triangleIndex] = a;

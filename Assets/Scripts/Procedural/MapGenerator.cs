@@ -521,10 +521,15 @@ public class MapGenerator : MonoBehaviour
         float topLeftZ = chunkSize / 2;
 
         int indexX = Mathf.Clamp(Mathf.RoundToInt((position.x + topLeftX) - transform.position.x), 0, map.Size - 1);
-        int indexY = Mathf.Clamp(Mathf.RoundToInt((-position.y + topLeftZ) + transform.position.z), 0, map.Size - 1);
+        int indexZ = Mathf.Clamp(Mathf.RoundToInt((-position.y + topLeftZ) + transform.position.z), 0, map.Size - 1);
 
+       if(indexX>= mapSize)indexX = mapSize-1;
+       else if (indexX< 0) indexX = 0;
+       if(indexZ < -mapSize) indexZ = -mapSize+1;
 
-        return new Vector3(indexX, Map.HeightMap[indexX, indexY], indexY);
+        Debug.Log("New Position: x= " + indexX + " , z= " + indexZ);
+
+        return new Vector3(indexX- topLeftX, Map.HeightMap[indexX, indexZ], indexZ*-1+topLeftZ);
     }
 
 
