@@ -36,8 +36,8 @@ namespace TrackerG5
             set { idLevel = value; }
         }
 
-        DateTime timestamp;
-        public DateTime Timestamp
+        long timestamp;
+        public long Timestamp
         {
             get { return timestamp; }
             set { timestamp = value; }

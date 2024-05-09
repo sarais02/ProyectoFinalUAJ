@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 namespace TrackerG5
 {
@@ -76,7 +77,7 @@ namespace TrackerG5
             e.Id = CreateHashID(idUser + DateTime.Now.ToString());
             e.IdUser = idUser;
             e.IdSession = idSession;
-            e.Timestamp = DateTime.Now;
+            e.Timestamp = (DateTime.Now.Ticks - new DateTime(1970, 1, 1).Ticks) / TimeSpan.TicksPerMillisecond;
 
             if (e.SetParamns(eventParameters))
                 persistence.Send(e);
@@ -95,15 +96,15 @@ namespace TrackerG5
             {
                 case serializeType.Json:
                     serializer = new JsonSerializer();
-                    resultLocation = "../Tracking System/Assets/Scripts/TRACKERG5/Data/RESULT.json";
+                    resultLocation = "../Assets/Scripts/Tracker/Data/RESULT.json";
                     break;
                 case serializeType.Csv:
                     serializer = new CsvSerializer();
-                    resultLocation = "../Tracking System/Assets/Scripts/TRACKERG5/Data/RESULT.csv";
+                    resultLocation = "../Assets/Scripts/Tracker/Data/RESULT.csv";
                     break;
                 case serializeType.Yaml:
                     serializer = new YamlSerializer();
-                    resultLocation = "../Tracking System/Assets/Scripts/TRACKERG5/Data/RESULT.yaml";
+                    resultLocation = "../Assets/Scripts/Tracker/Data/RESULT.yaml";
                     break;
                 default:
                     throw new Exception("Serializacion no valida");
@@ -123,7 +124,7 @@ namespace TrackerG5
             e.Id = CreateHashID(idUser + DateTime.Now.ToString());
             e.IdUser = idUser;
             e.IdSession = idSession;
-            e.Timestamp = DateTime.Now;
+            e.Timestamp = (DateTime.Now.Ticks - new DateTime(1970, 1, 1).Ticks) / TimeSpan.TicksPerMillisecond;
 
             persistence.Send(e);
 
@@ -136,7 +137,7 @@ namespace TrackerG5
             e.Id = CreateHashID(idUser + DateTime.Now.ToString());
             e.IdUser = idUser;
             e.IdSession = idSession;
-            e.Timestamp = DateTime.Now;
+            e.Timestamp = (DateTime.Now.Ticks - new DateTime(1970, 1, 1).Ticks) / TimeSpan.TicksPerMillisecond;
 
             persistence.Send(e);
 
