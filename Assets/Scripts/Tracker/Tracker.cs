@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using static UnityEngine.Rendering.DebugUI.Table;
 
 namespace TrackerG5
 {
@@ -13,7 +12,8 @@ namespace TrackerG5
         private static Tracker instance;
         string idUser;
         string idSession;
-        string idUserNameLocation = "../Assets/Scripts/Tracker/Data";
+        string projectPath;
+        string idUserNameLocation;
         string resultLocation = "";
 
         const int size = 7;
@@ -25,9 +25,6 @@ namespace TrackerG5
         public enum serializeType { Json, Csv, Yaml };
         public enum persistenceType { Disc };
         public enum eventType { BotPosition, StartTest, EndTest };
-
-
-
 
         Tracker() { }
         public static Tracker Instance
@@ -44,6 +41,7 @@ namespace TrackerG5
 
         private string GetUserID()
         {
+
             if (!File.Exists(idUserNameLocation))
             {
                 File.WriteAllText(idUserNameLocation, CreateHashID(DateTime.Now.ToString() + new Random().Next()));
@@ -86,6 +84,8 @@ namespace TrackerG5
 
         public void Init(serializeType sT, persistenceType pT)
         {
+            projectPath = Directory.GetCurrentDirectory();
+            idUserNameLocation = Path.Combine(projectPath, "Assets/Scripts/Tracker/Data/ID_USER_TRACKER");
             idUser = GetUserID();
             idSession = CreateHashID(idUser + DateTime.Now.ToString() + "tracker");
 
@@ -96,15 +96,15 @@ namespace TrackerG5
             {
                 case serializeType.Json:
                     serializer = new JsonSerializer();
-                    resultLocation = "../Assets/Scripts/Tracker/Data/RESULT.json";
+                    resultLocation = Path.Combine(projectPath, "Assets/Scripts/Tracker/Data/RESULT.json");
                     break;
                 case serializeType.Csv:
                     serializer = new CsvSerializer();
-                    resultLocation = "../Assets/Scripts/Tracker/Data/RESULT.csv";
+                    resultLocation = Path.Combine(projectPath, "Assets/Scripts/Tracker/Data/RESULT.csv");
                     break;
                 case serializeType.Yaml:
                     serializer = new YamlSerializer();
-                    resultLocation = "../Assets/Scripts/Tracker/Data/RESULT.yaml";
+                    resultLocation = Path.Combine(projectPath, "Assets/Scripts/Tracker/Data/RESULT.yaml");
                     break;
                 default:
                     throw new Exception("Serializacion no valida");
@@ -127,7 +127,6 @@ namespace TrackerG5
             e.Timestamp = (DateTime.Now.Ticks - new DateTime(1970, 1, 1).Ticks) / TimeSpan.TicksPerMillisecond;
 
             persistence.Send(e);
-
         }
 
         public void End()

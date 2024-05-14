@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class CalculateNavigableAreaController : MonoBehaviour
 {
-    
-  
-   
+
     public uint nBots;
 
     public GameObject botPrefab;
@@ -23,10 +21,13 @@ public class CalculateNavigableAreaController : MonoBehaviour
 
     Transform botsParent;
 
+    Dictionary<string, string> eventParams = new Dictionary<string, string>();
+
     public void StartTest()
     {
         TrackerG5.Tracker.Instance.Init(TrackerG5.Tracker.serializeType.Json, TrackerG5.Tracker.persistenceType.Disc);
-        TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.StartTest);
+        eventParams.Add("nBots", nBots.ToString());
+        TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.StartTest, eventParams);
     }
     public void EndTest()
     {
@@ -56,7 +57,7 @@ public class CalculateNavigableAreaController : MonoBehaviour
 
     GameObject GenerateBot(string name)
     {
-        GameObject gO = new GameObject(name, typeof(BotMovement), typeof(Rigidbody), typeof(MeshRenderer));
+        GameObject gO = new GameObject(name, typeof(BotMovement), typeof(Rigidbody), typeof(MeshRenderer), typeof(BotTracker));
         gO.transform.parent = botsParent;
         return gO;
     }

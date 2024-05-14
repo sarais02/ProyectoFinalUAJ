@@ -9,9 +9,9 @@ public class BotTracker : MonoBehaviour
     Rigidbody rb;
 
     [SerializeField]
-    float distantePerEvent;
+    float distantePerEvent = 5f;
     [SerializeField]
-    float timePerEvent;
+    float timePerEvent = 5f;
 
     float distante;
     Vector3 lastPosition;
@@ -46,8 +46,8 @@ public class BotTracker : MonoBehaviour
         if (distante >= distantePerEvent || time >= timePerEvent)
         {
             updateEventParams(distante >= distantePerEvent);
-            //TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.BotPosition);
-            Debug.Log("Mandado");
+            TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.BotPosition, eventParams);
+          
             distante = 0f;
             time = 0f;
         }
