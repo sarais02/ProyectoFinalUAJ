@@ -9,7 +9,7 @@ namespace TrackingBots
         [Header("Wander")]
         [SerializeField] float wanderRadius = 50f;
         [SerializeField] float targetYOffset = 0.5f;
-        [SerializeField] float movSpeed = 5f;
+        [SerializeField][Range(1, 3)] float wanderRandomRelative = 5;
 
         [Header("Other Forces")]
         [SerializeField] float gravity = 10f;
@@ -23,6 +23,15 @@ namespace TrackingBots
         GameObject aux;
         Rigidbody rb;
 
+        static float movSpeed = 0f;
+
+        private void Awake()
+        {
+            if (movSpeed == 0)
+                movSpeed = Mathf.Max(wanderRadius / (wanderRandomRelative*4), 1f);
+
+            Debug.Log(movSpeed);
+        }
 
         void Start()
         {
