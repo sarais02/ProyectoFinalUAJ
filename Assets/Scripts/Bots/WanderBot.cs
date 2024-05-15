@@ -23,16 +23,13 @@ namespace TrackingBots
         GameObject aux;
         Rigidbody rb;
 
-        static float movSpeed = 0f;
+        float movSpeed;
 
-        [SerializeField]CalculateNavigableAreaController controller;
+        [SerializeField] CalculateNavigableAreaController controller;
 
         private void Awake()
         {
-            if (movSpeed == 0)
-                movSpeed = Mathf.Max(wanderRadius / (wanderRandomRelative*4), 1f);
-
-            Debug.Log(movSpeed);
+            movSpeed = Mathf.Max(wanderRadius / (wanderRandomRelative * 3), 1f);
         }
 
         void Start()
@@ -40,12 +37,12 @@ namespace TrackingBots
             if (!controller.TestEnable)
                 return;
 
-                rb = GetComponent<Rigidbody>();
-                gravV3 = new Vector3(0f, -gravity, 0f);
+            rb = GetComponent<Rigidbody>();
+            gravV3 = new Vector3(0f, -gravity, 0f);
 
-                InvokeRepeating(nameof(GenerateNewPosition), 0f, 4f);
-           
-            
+            InvokeRepeating(nameof(GenerateNewPosition), 0f, 4f);
+
+
 
         }
 
@@ -65,7 +62,7 @@ namespace TrackingBots
             CheckPosition();
         }
 
-        public void SetParams(float wanderRadius, float wanderRelative, CalculateNavigableAreaController controller, 
+        public void SetParams(float wanderRadius, float wanderRelative, CalculateNavigableAreaController controller,
             MapGenerator map)
         {
             this.wanderRadius = wanderRadius;
@@ -103,7 +100,8 @@ namespace TrackingBots
             currTargetPos = mapGenerator.GetGlobalPosition(pointOnMap);
             currTargetPos.y += targetYOffset;
 
-            if (beaconPrefab != null) {
+            if (beaconPrefab != null)
+            {
                 GameObject.Destroy(aux); //QUITAR
                 aux = Instantiate(beaconPrefab, currTargetPos, Quaternion.identity); //QUITAR
             }
