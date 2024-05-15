@@ -25,7 +25,7 @@ namespace TrackingBots
 
         static float movSpeed = 0f;
 
-        CalculateNavigableAreaController controller;
+        [SerializeField]CalculateNavigableAreaController controller;
 
         private void Awake()
         {
@@ -37,14 +37,24 @@ namespace TrackingBots
 
         void Start()
         {
-            rb = GetComponent<Rigidbody>();
-            gravV3 = new Vector3(0f, -gravity, 0f);
+            if (!controller.TestEnable)
+                return;
 
-            InvokeRepeating(nameof(GenerateNewPosition), 0f, 4f);
+                rb = GetComponent<Rigidbody>();
+                gravV3 = new Vector3(0f, -gravity, 0f);
+
+                InvokeRepeating(nameof(GenerateNewPosition), 0f, 4f);
+           
+            
+
         }
+
 
         private void FixedUpdate()
         {
+            if (!controller.TestEnable)
+                return;
+
             Vector2 distance = new Vector2(currTargetPos.x - transform.position.x, currTargetPos.z - transform.position.z);
             Vector2 targetVel = distance.normalized * movSpeed;
             Vector2 steering = new Vector2(targetVel.x - rb.velocity.x, targetVel.y - rb.velocity.z);
@@ -55,11 +65,14 @@ namespace TrackingBots
             CheckPosition();
         }
 
-        public void SetParams(float wanderRadius, float wanderRelative, MapGenerator map)
+        public void SetParams(float wanderRadius, float wanderRelative, CalculateNavigableAreaController controller, 
+            MapGenerator map)
         {
-            mapGenerator = map;
             this.wanderRadius = wanderRadius;
             wanderRandomRelative = wanderRelative;
+            this.controller = controller;
+            mapGenerator = map;
+            UnityEditor.EditorUtility.SetDirty(this);
         }
 
         void CheckPosition()

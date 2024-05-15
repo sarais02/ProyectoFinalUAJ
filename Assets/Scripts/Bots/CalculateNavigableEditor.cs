@@ -86,11 +86,6 @@ namespace TrackingBots
             serializedObject.ApplyModifiedProperties();
 
         }
-        private void OnDisable()
-        {
-            if (controller != null && controller.testEnable)
-                controller.EndTest();
-        }
     }
 #endif
 }

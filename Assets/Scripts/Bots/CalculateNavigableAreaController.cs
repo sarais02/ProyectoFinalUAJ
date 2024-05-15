@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TrackerG5;
 using UnityEngine;
 
 namespace TrackingBots
@@ -37,7 +39,11 @@ namespace TrackingBots
 
         Dictionary<string, string> eventParams = new Dictionary<string, string>();
 
-        public bool testEnable = false;
+        bool testEnable = false;
+
+        public bool TestEnable{ get { return testEnable; } }
+
+       
         public void StartTest()
         {
             if (testEnable)
@@ -77,6 +83,12 @@ namespace TrackingBots
 
         }
 
+        public void SessionInfo(out CalculateNavigableAreaController controller, out MapGenerator map)
+        {
+            controller = this;
+            map = mapAssociated;
+        }
+
         void SpawnBots()
         {
             for (int i = 0; i < nBots; i++)
@@ -85,7 +97,7 @@ namespace TrackingBots
                 RaycastHit hit;
                 do
                 {
-                    Physics.Raycast(new Vector3(spawnPoint.position.x + Random.Range(-maxDispersionBots / 4, maxDispersionBots / 4), maxHeightOfTheMap, spawnPoint.position.z + Random.Range(-maxDispersionBots / 4, maxDispersionBots / 4)),
+                    Physics.Raycast(new Vector3(spawnPoint.position.x + UnityEngine.Random.Range(-maxDispersionBots / 4, maxDispersionBots / 4), maxHeightOfTheMap, spawnPoint.position.z + UnityEngine.Random.Range(-maxDispersionBots / 4, maxDispersionBots / 4)),
                         Vector3.down, out hit, Mathf.Infinity, terrainMask);
                 } while (hit.collider == null);
 
@@ -112,7 +124,7 @@ namespace TrackingBots
 
 
             //modificaciones para normal o salto
-            gO.GetComponent<WanderBot>().SetParams(wanderRadius, wanderRandomRelative, mapAssociated);
+            gO.GetComponent<WanderBot>().SetParams(wanderRadius, wanderRandomRelative, this, mapAssociated);
 
           
 
