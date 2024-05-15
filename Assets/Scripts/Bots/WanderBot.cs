@@ -12,7 +12,7 @@ namespace TrackingBots
         [SerializeField][Range(1, 3)] float wanderRandomRelative = 5;
 
         [Header("Other Forces")]
-        [SerializeField] float gravity = 10f;
+        [SerializeField] float gravity = 15f;
         Vector3 gravV3;
 
         [Header("Debug Help")]
@@ -51,6 +51,12 @@ namespace TrackingBots
             rb.AddForce(gravV3, ForceMode.Acceleration);
 
             CheckPosition();
+        }
+
+        public void SetParams(float wanderRadius, float wanderRelative)
+        {
+            this.wanderRadius = wanderRadius;
+            wanderRandomRelative = wanderRelative;
         }
 
         void CheckPosition()

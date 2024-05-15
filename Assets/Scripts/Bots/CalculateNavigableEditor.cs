@@ -38,11 +38,13 @@ namespace TrackingBots
             EditorGUILayout.Space();
             GUILayout.Label("Movimiento de los bots", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Bold, fontSize = 14 });
 
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("moveType"), new GUIContent("Tipo de desplazamiento de los bots"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("moveType"), new GUIContent("Tipo de movimiento de los bots"));
 
             if (controller.moveType == CalculateNavigableAreaController.MoveType.normal)
             {
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("distanceMove"), new GUIContent("Distancia por movimiento"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("wanderRadius"), new GUIContent("Amplitud de movimiento"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("wanderRandomRelative"), new GUIContent("Desviación media"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("colliderMat"), new GUIContent("Material físico de los bots"));
             }
             else if (controller.moveType == CalculateNavigableAreaController.MoveType.jumping)
             {
@@ -55,8 +57,7 @@ namespace TrackingBots
 
             GUILayout.Label("Visualización", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Bold, fontSize = 14 });
 
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("visualBot"), new GUIContent("Componente visual"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("visualBotMaterial"), new GUIContent("Material"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("visualBot"), new GUIContent("Estética de los bots"));
 
             EditorGUILayout.Space();
             EditorGUILayout.Space();
