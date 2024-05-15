@@ -34,6 +34,7 @@ namespace TrackingBots
             EditorGUILayout.PropertyField(serializedObject.FindProperty("maxDispersionBots"), new GUIContent("Dispersión de los bots desde el origen"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("terrainMask"), new GUIContent("Máscara del terreno"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("maxHeightOfTheMap"), new GUIContent("Máxima altura del mapa"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("mapAssociated"), new GUIContent("Mapa asociado - quitar"));
 
             EditorGUILayout.Space();
             GUILayout.Label("Movimiento de los bots", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Bold, fontSize = 14 });

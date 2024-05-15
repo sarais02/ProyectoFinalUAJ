@@ -25,6 +25,8 @@ namespace TrackingBots
 
         static float movSpeed = 0f;
 
+        CalculateNavigableAreaController controller;
+
         private void Awake()
         {
             if (movSpeed == 0)
@@ -53,8 +55,9 @@ namespace TrackingBots
             CheckPosition();
         }
 
-        public void SetParams(float wanderRadius, float wanderRelative)
+        public void SetParams(float wanderRadius, float wanderRelative, MapGenerator map)
         {
+            mapGenerator = map;
             this.wanderRadius = wanderRadius;
             wanderRandomRelative = wanderRelative;
         }

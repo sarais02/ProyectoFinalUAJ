@@ -40,6 +40,11 @@ namespace TrackingBots
         public bool testEnable = false;
         public void StartTest()
         {
+            if (testEnable)
+                return;
+
+            eventParams.Clear();
+
             TrackerG5.Tracker.Instance.Init(TrackerG5.Tracker.serializeType.Json, TrackerG5.Tracker.persistenceType.Disc);
             eventParams.Add("nBots", nBots.ToString());
             TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.StartTest, eventParams);
@@ -95,7 +100,10 @@ namespace TrackingBots
 
             var bBody = gO.GetComponent<Rigidbody>();
             bBody.useGravity = false;
-            gO.GetComponent<SphereCollider>().material = colliderMat;
+            bBody.constraints = RigidbodyConstraints.FreezeRotation;
+            var bColl = gO.GetComponent<SphereCollider>();
+            bColl.material = colliderMat;
+           
 
             if (visualBot != null)
             {
@@ -104,12 +112,12 @@ namespace TrackingBots
 
 
             //modificaciones para normal o salto
-            gO.GetComponent<WanderBot>().SetParams(wanderRadius, wanderRandomRelative);
+            gO.GetComponent<WanderBot>().SetParams(wanderRadius, wanderRandomRelative, mapAssociated);
 
           
 
             gO.transform.parent = botsParent;
-            gO.transform.position = position;
+            gO.transform.position = position + Vector3.up*0.5f;
             return gO;
         }
     }
