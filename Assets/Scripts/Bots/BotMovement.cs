@@ -2,120 +2,96 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BotMovement : MonoBehaviour
+namespace TrackingBots
 {
-
-    public LayerMask targetMask; // layer de los bots
-    public LayerMask obstacleMask; //layer de los obstaculos
-
-    [SerializeField]
-    MapGenerator mapGenerator;
-
-    [SerializeField]
-    float velocity = 5f;
-    [SerializeField]
-    float gravity = 10f;
-    [SerializeField]
-    public float movement_Radius = 50f;
-
-    Vector3 movemntToPosition;
-    Rigidbody rb;
-
-    [SerializeField]
-    float minDistInOneSec = 2f;
-
-    float distCheckRefreshSecs = 1f;
-    Vector3 lastPosCheck;
-
-    //QUITAR
-    public GameObject goToPoint;
-    GameObject aux;
-
-    //Random Impulse
-    [SerializeField]
-    float timeRandomImpulse=5f;
-    [SerializeField]
-    float impulseForce = 25f;
-    bool impulseRandom = true;
-    private void Start()
+    public class BotMovement : MonoBehaviour
     {
-        movemntToPosition = default(Vector3);
-        rb = GetComponent<Rigidbody>();
 
-    }
+        [SerializeField]
+        MapGenerator mapGenerator;
 
-    private void FixedUpdate()
-    {
-        if (movemntToPosition == default(Vector3))
+        [SerializeField]
+        float velocity = 5f;
+        [SerializeField]
+        float gravity = 10f;
+        [SerializeField]
+        public float movement_Radius = 50f;
+
+        Vector3 movemntToPosition;
+        Rigidbody rb;
+
+        [SerializeField]
+        float minDistInOneSec = 2f;
+
+        float distCheckRefreshSecs = 1f;
+        Vector3 lastPosCheck;
+
+        //QUITAR
+        public GameObject goToPoint;
+        GameObject aux;
+
+        private void Start()
         {
-            GenerateNewPosition();
-        }
-
-        MoveToObjective();
-
-        RandomImpulseVelocity();
-
-        CheckPosition();
-    }
-
-    void GenerateNewPosition()
-    {
-        var pointOnMap = new Vector2(Random.Range(transform.position.x - movement_Radius, transform.position.x + movement_Radius),
-              Random.Range(transform.position.z - movement_Radius, transform.position.z + movement_Radius));
-
-        movemntToPosition = mapGenerator.GetGlobalPosition(pointOnMap);
-        movemntToPosition.y += 0.5f;
-
-        CancelInvoke(nameof(CheckMovedInOneSec));
-        InvokeRepeating(nameof(CheckMovedInOneSec), distCheckRefreshSecs, distCheckRefreshSecs);
-
-        aux = Instantiate(goToPoint, movemntToPosition, Quaternion.identity); //QUITAR 
-    }
-
-    void MoveToObjective()
-    {
-        // Calcula la dirección hacia el objetivo
-        Vector3 direccion = (movemntToPosition - transform.position).normalized;
-
-        // Mueve el objeto hacia el objetivo
-        rb.velocity = new Vector3((direccion * velocity).x , rb.velocity.y, (direccion * velocity).z );
-        rb.AddForce(new Vector3(0, -gravity, 0), ForceMode.Acceleration);
-
-    }
-
-    void CheckPosition()
-    {
-        if (Vector3.Distance(transform.position, movemntToPosition) < 2f)
-        {
-            // Detener el movimiento si el objeto está lo suficientemente cerca del objetivo
-            GameObject.Destroy(aux); //QUITAR
             movemntToPosition = default(Vector3);
-        }
-    }
+            rb = GetComponent<Rigidbody>();
 
-    void CheckMovedInOneSec()
-    {
-        if (Vector3.Distance(transform.position, lastPosCheck) < minDistInOneSec)
+        }
+
+        private void FixedUpdate()
         {
-            GameObject.Destroy(aux); //QUITAR
-            movemntToPosition = default(Vector3);
-        }
-        lastPosCheck = transform.position;
-    }
+            if (movemntToPosition == default(Vector3))
+            {
+                GenerateNewPosition();
+            }
 
-    void RandomImpulseVelocity()
-    {
-        if (impulseRandom)
+            MoveToObjective();
+
+            CheckPosition();
+        }
+
+        void GenerateNewPosition()
         {
-            Debug.Log("IMPULSE");
-            rb.AddForce(new Vector3(Random.Range(-1f, 1f) * impulseForce, rb.velocity.y, Random.Range(-1f, 1f) * impulseForce), ForceMode.VelocityChange);
+            var pointOnMap = new Vector2(Random.Range(transform.position.x - movement_Radius, transform.position.x + movement_Radius),
+                  Random.Range(transform.position.z - movement_Radius, transform.position.z + movement_Radius));
 
-            ChangeImpulse();
-            Invoke(nameof(ChangeImpulse), Random.Range(1, timeRandomImpulse));
+            movemntToPosition = mapGenerator.GetGlobalPosition(pointOnMap);
+            movemntToPosition.y += 0.5f;
+
+            CancelInvoke(nameof(CheckMovedInOneSec));
+            InvokeRepeating(nameof(CheckMovedInOneSec), distCheckRefreshSecs, distCheckRefreshSecs);
+
+            aux = Instantiate(goToPoint, movemntToPosition, Quaternion.identity); //QUITAR 
         }
-    }
 
-    void ChangeImpulse(){
-        impulseRandom = !impulseRandom;
+        void MoveToObjective()
+        {
+            // Calcula la dirección hacia el objetivo
+            Vector3 direccion = (movemntToPosition - transform.position).normalized;
+
+            // Mueve el objeto hacia el objetivo
+            rb.velocity = new Vector3((direccion * velocity).x, rb.velocity.y, (direccion * velocity).z);
+            rb.AddForce(new Vector3(0, -gravity, 0), ForceMode.Acceleration);
+
+        }
+
+        void CheckPosition()
+        {
+            if (Vector3.Distance(transform.position, movemntToPosition) < 2f)
+            {
+                // Detener el movimiento si el objeto está lo suficientemente cerca del objetivo
+                GameObject.Destroy(aux); //QUITAR
+                movemntToPosition = default(Vector3);
+            }
+        }
+
+        void CheckMovedInOneSec()
+        {
+            if (Vector3.Distance(transform.position, lastPosCheck) < minDistInOneSec)
+            {
+                GameObject.Destroy(aux); //QUITAR
+                movemntToPosition = default(Vector3);
+            }
+            lastPosCheck = transform.position;
+        }
     }
 }

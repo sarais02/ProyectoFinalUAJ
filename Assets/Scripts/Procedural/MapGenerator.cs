@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 /// <summary>
 /// Generador de mapas Procedurales
@@ -219,7 +218,6 @@ public class MapGenerator : MonoBehaviour
             map.setChunkSize(chunkSize);
 
         GenerateObjects();
-
     }
 
     private T AddComponent<T>()

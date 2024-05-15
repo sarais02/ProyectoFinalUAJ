@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
+namespace TrackingBots { 
 #if UNITY_EDITOR
 [CustomEditor(typeof(CalculateNavigableAreaController))]
 public class CalculateNavigableEditor : Editor
@@ -58,3 +59,4 @@ public class CalculateNavigableEditor : Editor
     }
 }
 #endif
+}
