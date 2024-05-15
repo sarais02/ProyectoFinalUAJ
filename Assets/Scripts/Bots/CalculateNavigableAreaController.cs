@@ -26,16 +26,21 @@ namespace TrackingBots
 
         Dictionary<string, string> eventParams = new Dictionary<string, string>();
 
+        public bool testEnable = false;
         public void StartTest()
         {
             TrackerG5.Tracker.Instance.Init(TrackerG5.Tracker.serializeType.Json, TrackerG5.Tracker.persistenceType.Disc);
             eventParams.Add("nBots", nBots.ToString());
             TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.StartTest, eventParams);
+            testEnable = true;
+            Debug.Log("Test iniciado");
         }
         public void EndTest()
         {
             TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.EndTest);
             TrackerG5.Tracker.Instance.End();
+            testEnable = false;
+            Debug.Log("Test finalizado");
         }
 
         public void GenerateBots()

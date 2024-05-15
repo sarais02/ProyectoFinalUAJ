@@ -20,7 +20,6 @@ namespace TrackerG5
 
         IPersistence persistence;
         ISerializer serializer;
-        HashSet<ITrackerAsset> assets = new HashSet<ITrackerAsset>();//lista de assets
 
         public enum serializeType { Json, Csv, Yaml };
         public enum persistenceType { Disc };
