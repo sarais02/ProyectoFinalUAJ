@@ -20,7 +20,7 @@ namespace TrackingBots
             EditorGUILayout.Space();
             ////
             EditorGUILayout.Space();
-            GUILayout.Label("Elementos básicos", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Bold, fontSize = 14 });
+            GUILayout.Label("Elementos generales", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Bold, fontSize = 14 });
             ////
 
             EditorGUI.BeginChangeCheck();//Para poder ver si se han producido cambios en el editor
@@ -28,6 +28,14 @@ namespace TrackingBots
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("nBots"), new GUIContent("Numero de Bots"));
 
+
+
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("spawnPoint"), new GUIContent("Posición central de la generación de los bots"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("distanceBotsFromPoint"), new GUIContent("Dispersión de los bots desde el origen"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("maxHeightOfTheMap"), new GUIContent("Máxima altura del mapa"));
+
+            EditorGUILayout.Space();
+            GUILayout.Label("Movimiento de los bots", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Bold, fontSize = 14 });
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("moveType"), new GUIContent("Tipo de desplazamiento de los bots"));
 
@@ -49,6 +57,8 @@ namespace TrackingBots
             EditorGUILayout.PropertyField(serializedObject.FindProperty("visualBot"), new GUIContent("Componente visual"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("visualBotMaterial"), new GUIContent("Material personalizable"));
 
+            EditorGUILayout.Space();
+            EditorGUILayout.Space();
             EditorGUILayout.Space();
 
             if (GUILayout.Button("Generar bots"))

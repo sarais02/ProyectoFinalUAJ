@@ -7,21 +7,26 @@ namespace TrackingBots
 
     public class CalculateNavigableAreaController : MonoBehaviour
     {
-
+        //variables generales
         public uint nBots;
-
-        public GameObject botPrefab;
 
         public Mesh visualBot;
 
         public Material visualBotMaterial;
 
+        public Transform spawnPoint;
+
+        public float distanceBotsFromPoint, maxHeightOfTheMap;
+
+        //variables relacionadas con el tipo de movimiento
         public MoveType moveType;
 
         public float distanceMove, jumpingForce;
 
         public enum MoveType { normal, jumping }
 
+
+        //vairables internas
         Transform botsParent;
 
         Dictionary<string, string> eventParams = new Dictionary<string, string>();
