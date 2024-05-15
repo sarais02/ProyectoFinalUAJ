@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TrackerG5;
+using UnityEditor;
 using UnityEngine;
 
 namespace TrackingBots
@@ -39,30 +40,49 @@ namespace TrackingBots
 
         Dictionary<string, string> eventParams = new Dictionary<string, string>();
 
-        bool testEnable = false;
+        [SerializeField] bool testEnable = false;
 
         public bool TestEnable{ get { return testEnable; } }
 
-       
+
+        private void Start()
+        {
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        private void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            if(testEnable)
+            {
+                if (state == PlayModeStateChange.EnteredPlayMode)
+                {
+                    eventParams.Clear();
+
+                    TrackerG5.Tracker.Instance.Init(TrackerG5.Tracker.serializeType.Json, TrackerG5.Tracker.persistenceType.Disc);
+                    eventParams.Add("nBots", nBots.ToString());
+                    TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.StartTest, eventParams);
+                    Debug.Log("Test iniciado");
+                }
+                else if (state == PlayModeStateChange.ExitingPlayMode)
+                {
+                    TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.EndTest);
+                    TrackerG5.Tracker.Instance.End();
+                    Debug.Log("Test finalizado");
+                }
+            }
+          
+        }
+
         public void StartTest()
         {
-            if (testEnable)
-                return;
-
-            eventParams.Clear();
-
-            TrackerG5.Tracker.Instance.Init(TrackerG5.Tracker.serializeType.Json, TrackerG5.Tracker.persistenceType.Disc);
-            eventParams.Add("nBots", nBots.ToString());
-            TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.StartTest, eventParams);
             testEnable = true;
-            Debug.Log("Test iniciado");
+            UnityEditor.EditorUtility.SetDirty(this);
+
         }
         public void EndTest()
         {
-            TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.EndTest);
-            TrackerG5.Tracker.Instance.End();
             testEnable = false;
-            Debug.Log("Test finalizado");
+            UnityEditor.EditorUtility.SetDirty(this);
         }
 
         public void GenerateBots()

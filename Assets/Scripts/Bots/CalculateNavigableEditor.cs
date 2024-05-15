@@ -77,11 +77,27 @@ namespace TrackingBots
             {
                 controller.StartTest();
             }
-
+           
             if (GUILayout.Button("Finalizar test"))
             {
                 controller.EndTest();
             }
+
+            EditorGUILayout.Space();
+
+            if (controller.TestEnable)
+            {
+                GUILayout.Label("TESTS EN MARCHA!", new GUIStyle(GUI.skin.label) 
+                { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold, fontSize = 14 });
+            }
+            else
+            {
+
+                GUILayout.Label("LOS BOT Y TESTS ESTÁN DESACTIVADOS", new GUIStyle(GUI.skin.label)
+                { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold, fontSize = 14 });
+
+            }
+
 
             serializedObject.ApplyModifiedProperties();
 
