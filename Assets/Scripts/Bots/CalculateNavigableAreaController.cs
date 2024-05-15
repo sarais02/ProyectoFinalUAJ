@@ -16,7 +16,9 @@ namespace TrackingBots
 
         public Transform spawnPoint;
 
-        public float distanceBotsFromPoint, maxHeightOfTheMap;
+        public LayerMask terrainMask;
+
+        public float maxDispersionBots, maxHeightOfTheMap;
 
         //variables relacionadas con el tipo de movimiento
         public MoveType moveType;
@@ -62,16 +64,32 @@ namespace TrackingBots
             botsParent = new GameObject("BotsRoot").GetComponent<Transform>();
             botsParent.parent = transform;
 
+            SpawnBots();
+
+        }
+
+        void SpawnBots()
+        {
             for (int i = 0; i < nBots; i++)
             {
-                GenerateBot("Bot" + i.ToString());
+                Vector3 positionToSpawn;
+                RaycastHit hit;
+                do
+                {
+                    Physics.Raycast(new Vector3(spawnPoint.position.x + Random.Range(-maxDispersionBots/4, maxDispersionBots/4), maxHeightOfTheMap, spawnPoint.position.z + Random.Range(-maxDispersionBots / 4, maxDispersionBots / 4)),
+                        Vector3.down, out hit, Mathf.Infinity, terrainMask);
+                } while (hit.collider == null);
+
+                positionToSpawn = hit.point;
+                GenerateBot("Bot" + i.ToString(), positionToSpawn);
             }
         }
 
-        GameObject GenerateBot(string name)
+        GameObject GenerateBot(string name, Vector3 position)
         {
             GameObject gO = new GameObject(name, typeof(BotMovement), typeof(Rigidbody), typeof(MeshRenderer), typeof(BotTracker));
             gO.transform.parent = botsParent;
+            gO.transform.position = position;
             return gO;
         }
     }
