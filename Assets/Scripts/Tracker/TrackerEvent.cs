@@ -51,12 +51,7 @@ namespace TrackerG5
 
         public TrackerEvent()
         {
-            //this.typeEvent = typeEvent;
-            //this.id = id;
-            //this.idUser = idUser;
-            //this.idSession = idSession;
-            //this.idLevel = idLevel;
-            //timestamp = DateTime.UtcNow;
+
         }
 
         public string ToJson()

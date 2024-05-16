@@ -29,7 +29,6 @@ namespace TrackingBots
 
             lastPosition = rb.position;
 
-            //Parametros para los eventos de movimiento del bot
             eventParams = new Dictionary<string, string>();
             eventParams.Add("posX", "0");
             eventParams.Add("posY", "0");
@@ -49,7 +48,6 @@ namespace TrackingBots
             {
                 updateEventParams(distante >= distantePerEvent);
                 TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.BotPosition, eventParams);
-
                 distante = 0f;
                 time = 0f;
             }
