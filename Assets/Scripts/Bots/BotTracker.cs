@@ -21,6 +21,10 @@ namespace TrackingBots
         float time;
         Dictionary<string, string> eventParams;
 
+        [SerializeField] CalculateNavigableAreaController controller;
+        public CalculateNavigableAreaController Controller { get { return controller; } set { controller = value; } }
+
+
         void Start()
         {
             rb = GetComponent<Rigidbody>();
@@ -36,8 +40,13 @@ namespace TrackingBots
             eventParams.Add("updateByMove", "none");
         }
 
+
         void Update()
         {
+
+            if (!controller.TestEnable)
+                return;
+
             float distanceThisFrame = Vector3.Distance(lastPosition, transform.position);
             distante += distanceThisFrame;
             lastPosition = rb.position;

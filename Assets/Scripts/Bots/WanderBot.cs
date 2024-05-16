@@ -1,4 +1,6 @@
+using Unity.Burst.CompilerServices;
 using UnityEngine;
+using UnityEngine.TerrainUtils;
 
 namespace TrackingBots
 {
@@ -27,11 +29,12 @@ namespace TrackingBots
 
         [SerializeField] CalculateNavigableAreaController controller;
 
-        
+
         float minDistInOneSec = 2f;
         float distCheckRefreshSecs = 1f;
         Vector3 lastPosCheck;
 
+        static uint maxSearch = 100;
         private void Awake()
         {
             movSpeed = Mathf.Max(wanderRadius / (wanderRandomRelative * 3), 1f);
@@ -70,6 +73,7 @@ namespace TrackingBots
         public void SetParams(float wanderRadius, float wanderRelative, CalculateNavigableAreaController controller,
             MapGenerator map)
         {
+
             this.wanderRadius = wanderRadius;
             wanderRandomRelative = wanderRelative;
             this.controller = controller;
@@ -100,11 +104,16 @@ namespace TrackingBots
 
             lastTargetPos = transform.position;
 
+            //codigo del mapa
+            /*
             Vector2 pointOnMap = new Vector2(Random.Range(transform.position.x - wanderRadius, transform.position.x + wanderRadius),
                   Random.Range(transform.position.z - wanderRadius, transform.position.z + wanderRadius));
 
             currTargetPos = mapGenerator.GetGlobalPosition(pointOnMap);
             currTargetPos.y += targetYOffset;
+            */
+            currTargetPos = GetPos();
+            Debug.Log(currTargetPos);
 
             if (beaconPrefab != null)
             {
@@ -114,6 +123,32 @@ namespace TrackingBots
 
             CancelInvoke(nameof(CheckMovedInOneSec));
             InvokeRepeating(nameof(CheckMovedInOneSec), distCheckRefreshSecs, distCheckRefreshSecs);
+        }
+
+        RaycastHit hit;
+        Vector3 GetPos()
+        {
+            int searchs = 0;
+            do
+            {
+                Physics.Raycast(new Vector3(Random.Range(transform.position.x - wanderRadius, transform.position.x + wanderRadius), controller.MaxHeightOfTheMap,
+                  Random.Range(transform.position.z - wanderRadius, transform.position.z + wanderRadius)), Vector3.down, out hit, Mathf.Infinity, controller.TerrainMask);
+                searchs++;
+            } while (hit.collider == null && searchs < maxSearch);
+
+            //caso donde se ha quedado aislado desactivamos el bot
+            if (searchs < maxSearch)
+            {
+                return hit.point;
+            }
+            else
+            {
+                Destroy(gameObject);
+                CancelInvoke();
+                return Vector3.zero;
+            }
+
+
         }
 
         void FallingBotRes()

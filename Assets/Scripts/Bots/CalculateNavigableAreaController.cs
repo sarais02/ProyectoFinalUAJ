@@ -43,7 +43,8 @@ namespace TrackingBots
         [SerializeField] bool testEnable = false;
 
         public bool TestEnable{ get { return testEnable; } }
-
+        public LayerMask TerrainMask { get { return terrainMask; } }
+        public float MaxHeightOfTheMap { get { return maxHeightOfTheMap; } }
 
         private void Start()
         {
@@ -132,7 +133,7 @@ namespace TrackingBots
 
             var bBody = gO.GetComponent<Rigidbody>();
             bBody.useGravity = false;
-            bBody.constraints = RigidbodyConstraints.FreezeRotation;
+            bBody.constraints = RigidbodyConstraints.FreezeRotationY;
             var bColl = gO.GetComponent<SphereCollider>();
             bColl.material = colliderMat;
            
@@ -145,8 +146,10 @@ namespace TrackingBots
 
             //modificaciones para normal o salto
             gO.GetComponent<WanderBot>().SetParams(wanderRadius, wanderRandomRelative, this, mapAssociated);
+            var bTracker = gO.GetComponent<BotTracker>();
+            bTracker.Controller = this;
+            UnityEditor.EditorUtility.SetDirty(bTracker);
 
-          
 
             gO.transform.parent = botsParent;
             gO.transform.position = position + Vector3.up*0.5f;
