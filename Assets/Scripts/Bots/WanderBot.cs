@@ -27,6 +27,11 @@ namespace TrackingBots
 
         [SerializeField] CalculateNavigableAreaController controller;
 
+        
+        float minDistInOneSec = 2f;
+        float distCheckRefreshSecs = 1f;
+        Vector3 lastPosCheck;
+
         private void Awake()
         {
             movSpeed = Mathf.Max(wanderRadius / (wanderRandomRelative * 3), 1f);
@@ -78,6 +83,7 @@ namespace TrackingBots
 
             if (Vector3.Distance(transform.position, currTargetPos) < 2f)
             {
+                Debug.Log("LLEGADO A DESTINO");
                 ResetInvoke();
                 GenerateNewPosition();
             }
@@ -105,6 +111,9 @@ namespace TrackingBots
                 GameObject.Destroy(aux); //QUITAR
                 aux = Instantiate(beaconPrefab, currTargetPos, Quaternion.identity); //QUITAR
             }
+
+            CancelInvoke(nameof(CheckMovedInOneSec));
+            InvokeRepeating(nameof(CheckMovedInOneSec), distCheckRefreshSecs, distCheckRefreshSecs);
         }
 
         void FallingBotRes()
@@ -116,5 +125,17 @@ namespace TrackingBots
                 Debug.Log("Reset Position by Falling out of the map");
             }
         }
+
+        void CheckMovedInOneSec()
+        {
+            if (Vector3.Distance(transform.position, lastPosCheck) < minDistInOneSec)
+            {
+                Debug.Log("OBSTACULIZADO");
+                ResetInvoke();
+                GenerateNewPosition();
+            }
+            lastPosCheck = transform.position;
+        }
+
     }
 }
