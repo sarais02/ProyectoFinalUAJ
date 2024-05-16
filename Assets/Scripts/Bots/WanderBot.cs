@@ -6,7 +6,6 @@ namespace TrackingBots
 {
     public class WanderBot : MonoBehaviour
     {
-        [SerializeField] MapGenerator mapGenerator;
 
         [Header("Wander")]
         [SerializeField] float wanderRadius = 50f;
@@ -70,14 +69,12 @@ namespace TrackingBots
             CheckPosition();
         }
 
-        public void SetParams(float wanderRadius, float wanderRelative, CalculateNavigableAreaController controller,
-            MapGenerator map)
+        public void SetParams(float wanderRadius, float wanderRelative, CalculateNavigableAreaController controller)
         {
 
             this.wanderRadius = wanderRadius;
             wanderRandomRelative = wanderRelative;
             this.controller = controller;
-            mapGenerator = map;
             UnityEditor.EditorUtility.SetDirty(this);
         }
 

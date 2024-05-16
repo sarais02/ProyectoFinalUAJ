@@ -27,14 +27,14 @@ namespace TrackingBots
 
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("nBots"), new GUIContent("Numero de Bots"));
-
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("scaleTimeInTest"), new GUIContent("Velocidad del juego durante el test"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("maxTimeTest"), new GUIContent("Máxima duración del test (en segundos)"));
 
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("spawnPoint"), new GUIContent("Posición central de la generación de los bots"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("maxDispersionBots"), new GUIContent("Dispersión de los bots desde el origen"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("terrainMask"), new GUIContent("Máscara del terreno"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("maxHeightOfTheMap"), new GUIContent("Máxima altura del mapa"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("mapAssociated"), new GUIContent("Mapa asociado - quitar"));
 
             EditorGUILayout.Space();
             GUILayout.Label("Movimiento de los bots", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Bold, fontSize = 14 });
@@ -52,6 +52,11 @@ namespace TrackingBots
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("jumpingForce"), new GUIContent("Fuerza de salto"));
             }
 
+            EditorGUILayout.Space();
+            GUILayout.Label("Sistema de métrica de recorrido", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Bold, fontSize = 14 });
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("mapSize"), new GUIContent("Tamaño del mapa"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("precisionLevel"), new GUIContent("Precisión del mapeado"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("timeCheck"), new GUIContent("Tiendo de actualización del espacio recorrido"));
 
             EditorGUILayout.Space();
             EditorGUILayout.Space();

@@ -20,8 +20,6 @@ namespace TrackingBots
         [SerializeField] LayerMask terrainMask;
 
         [SerializeField] float maxDispersionBots, maxHeightOfTheMap;
-
-        [SerializeField] MapGenerator mapAssociated;
         //variables relacionadas con el tipo de movimiento
         public MoveType moveType;
 
@@ -46,9 +44,75 @@ namespace TrackingBots
         public LayerMask TerrainMask { get { return terrainMask; } }
         public float MaxHeightOfTheMap { get { return maxHeightOfTheMap; } }
 
+        [SerializeField] float mapSize = 10;
+        [SerializeField][Range(1, 10)] int precisionLevel = 1;
+        [SerializeField] float timeCheck = 1;
+
+        [SerializeField][Range(0.5f,5)] float scaleTimeInTest = 1;
+        [SerializeField] uint maxTimeTest = 3600;
+
+        [SerializeField] List<Transform> bots;
+
+        List<AchievableGrid> achievableGrid;
+
+
+        int areasAchieve = 0;
+        private void Awake()
+        {
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;            
+        }
         private void Start()
         {
-            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+            CreateGridMap();
+
+            Time.timeScale = scaleTimeInTest;
+
+            InvokeRepeating("ActualiceGrid", 0.5f, timeCheck);
+            Invoke("EndTestByTime", maxTimeTest);
+        }
+
+        private void OnDisable()
+        {
+            CancelInvoke();
+        }
+
+        void EndTestByTime()
+        {
+            //para editor
+            if (Application.isEditor)
+            {
+                UnityEditor.EditorApplication.isPlaying = false;
+            }
+            //para ejecutable
+        }
+
+        void ActualiceGrid()
+        {
+            foreach (var grid in achievableGrid)
+            {
+                if (!grid.Achieve)
+                {
+                    if (grid.CheckBots(bots))
+                    {
+                        areasAchieve++;
+                        
+                        //todo recorrido
+                        if(areasAchieve == achievableGrid.Count)
+                        {
+                            if(Application.isEditor)
+                            {
+                                UnityEditor.EditorApplication.isPlaying = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        
+        private void OnDestroy()
+        {
+            CancelInvoke();
         }
 
         private void OnPlayModeStateChanged(PlayModeStateChange state)
@@ -69,6 +133,9 @@ namespace TrackingBots
                     TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.EndTest);
                     TrackerG5.Tracker.Instance.End();
                     Debug.Log("Test finalizado");
+
+                   
+                    Debug.Log("Porcentaje de mapa alcanzado: " + (areasAchieve / (float)achievableGrid.Count) * 100 + "%");
                 }
             }
           
@@ -80,6 +147,7 @@ namespace TrackingBots
             UnityEditor.EditorUtility.SetDirty(this);
 
         }
+
         public void EndTest()
         {
             testEnable = false;
@@ -104,14 +172,47 @@ namespace TrackingBots
 
         }
 
-        public void SessionInfo(out CalculateNavigableAreaController controller, out MapGenerator map)
+        void CreateGridMap()
+        {
+            int numGrids = (9 + precisionLevel);
+            float sizeGrid = mapSize / numGrids;
+
+            achievableGrid = new List<AchievableGrid>();
+
+            float x, z;
+            x = spawnPoint.position.x - mapSize / 2 + sizeGrid / 2;
+            z = spawnPoint.position.z - mapSize / 2 + sizeGrid / 2;
+
+            // j = x i = z
+            for (int i = 0; i < numGrids; i++)
+            {
+                for (int j = 0; j < numGrids; j++)
+                {
+                    if (Physics.CheckBox(new Vector3(x, 0, z), new Vector3(sizeGrid / 2, maxHeightOfTheMap, sizeGrid / 2), Quaternion.identity, terrainMask))
+                    {
+                        AchievableGrid grid = new AchievableGrid();
+                        grid.SetParams(x - sizeGrid / 2, x + sizeGrid / 2, z - sizeGrid / 2, z + sizeGrid / 2);
+                        achievableGrid.Add(grid);
+                    }
+
+                    x += sizeGrid;
+                }
+
+                x = spawnPoint.position.x - mapSize / 2 + sizeGrid / 2;
+                z += sizeGrid;
+            }
+
+        }
+
+        public void SessionInfo(out CalculateNavigableAreaController controller)
         {
             controller = this;
-            map = mapAssociated;
         }
 
         void SpawnBots()
         {
+            bots = new List<Transform>();
+
             for (int i = 0; i < nBots; i++)
             {
                 Vector3 positionToSpawn;
@@ -123,8 +224,12 @@ namespace TrackingBots
                 } while (hit.collider == null);
 
                 positionToSpawn = hit.point;
-                GenerateBot("Bot" + i.ToString(), positionToSpawn);
+
+                bots.Add(GenerateBot("Bot" + i.ToString(), positionToSpawn).transform);
             }
+
+
+            UnityEditor.EditorUtility.SetDirty(this);
         }
 
         GameObject GenerateBot(string name, Vector3 position)
@@ -145,7 +250,7 @@ namespace TrackingBots
 
 
             //modificaciones para normal o salto
-            gO.GetComponent<WanderBot>().SetParams(wanderRadius, wanderRandomRelative, this, mapAssociated);
+            gO.GetComponent<WanderBot>().SetParams(wanderRadius, wanderRandomRelative, this);
             var bTracker = gO.GetComponent<BotTracker>();
             bTracker.Controller = this;
             UnityEditor.EditorUtility.SetDirty(bTracker);
