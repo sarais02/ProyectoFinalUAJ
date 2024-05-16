@@ -64,9 +64,9 @@ namespace TrackingBots
 
         void updateEventParams(bool type)
         {
-            eventParams["posX"] = rb.velocity.x.ToString();
-            eventParams["posY"] = rb.velocity.y.ToString();
-            eventParams["posZ"] = rb.velocity.z.ToString();
+            eventParams["posX"] = (transform.position.x + 25).ToString();
+            eventParams["posY"] = transform.position.y.ToString();
+            eventParams["posZ"] = ((transform.position.z - 25)*-1).ToString();
 
             if (type)
                 eventParams["updateByMove"] = "Distance";

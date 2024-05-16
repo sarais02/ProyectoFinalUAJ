@@ -263,10 +263,11 @@ MonoBehaviour:
   mapGenerator: {fileID: 0}
   wanderRadius: 50
   targetYOffset: 0.5
-  movSpeed: 15
+  wanderRandomRelative: 3
   gravity: 15
   beaconPrefab: {fileID: 3325323690688290350, guid: 441daebc6c7843b4e81fbaaa6fb53d2a,
     type: 3}
+  controller: {fileID: 0}
 --- !u!54 &6408049390307941134
 Rigidbody:
   m_ObjectHideFlags: 0
