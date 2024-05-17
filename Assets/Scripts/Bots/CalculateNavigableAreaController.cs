@@ -7,11 +7,21 @@ using UnityEngine;
 
 namespace TrackingBots
 {
-
+    [Serializable]
+    public class Config
+    {
+        public uint nBots;
+        public uint maxTimeTest;
+        public float maxDispersionBots, maxHeightOfTheMap;
+        public float wanderRadius;
+        public float mapSize;
+        public float timeCheck;
+    }
     public class CalculateNavigableAreaController : MonoBehaviour
     {
         //variables generales
         public uint nBots;
+        private uint nBots_;
 
         [SerializeField] GameObject visualBot;
 
@@ -20,6 +30,7 @@ namespace TrackingBots
         [SerializeField] LayerMask terrainMask;
 
         [SerializeField] float maxDispersionBots, maxHeightOfTheMap;
+        private float maxDispersionBots_, maxHeightOfTheMap_;
         //variables relacionadas con el tipo de movimiento
         public MoveType moveType;
 
@@ -29,6 +40,7 @@ namespace TrackingBots
 
         //para el movimiento normal
         [SerializeField] float wanderRadius;
+        private float wanderRadius_;
         [SerializeField][Range(1, 3)] float wanderRandomRelative;
         [SerializeField] PhysicMaterial colliderMat;
 
@@ -39,17 +51,21 @@ namespace TrackingBots
         Dictionary<string, string> eventParams = new Dictionary<string, string>();
 
         [SerializeField] bool testEnable = false;
+        [SerializeField] TextAsset json;
 
         public bool TestEnable{ get { return testEnable; } }
         public LayerMask TerrainMask { get { return terrainMask; } }
-        public float MaxHeightOfTheMap { get { return maxHeightOfTheMap; } }
+        public float MaxHeightOfTheMap { get { return maxHeightOfTheMap_; } }
 
         [SerializeField] float mapSize = 10;
+        private float mapSize_;
         [SerializeField][Range(1, 10)] int precisionLevel = 1;
         [SerializeField] float timeCheck = 1;
+        private float timeCheck_;
 
         [SerializeField][Range(0.5f,5)] float scaleTimeInTest = 1;
         [SerializeField] uint maxTimeTest = 3600;
+        private uint maxTimeTest_;
 
         [SerializeField] List<Transform> bots;
 
@@ -59,6 +75,28 @@ namespace TrackingBots
         int areasAchieve = 0;
         private void Awake()
         {
+#if UNITY_EDITOR
+            // En el editor, usar los valores del script
+            nBots_ = nBots;
+            maxDispersionBots_ = maxDispersionBots;
+            maxHeightOfTheMap_ = maxHeightOfTheMap;
+            maxTimeTest_ = maxTimeTest;
+            mapSize_ = mapSize;
+            wanderRadius_ = wanderRadius;
+            timeCheck_ = timeCheck;
+#else
+            //En una build, cargar los valores desde un archivo JSON
+            Config config = new Config();
+            config = JsonUtility.FromJson<Config>(json.text);
+            nBots_ = config.nBots;
+            maxDispersionBots_ = config.maxDispersionBots;
+            maxHeightOfTheMap_ = config.maxHeightOfTheMap;
+            maxTimeTest_ = config.maxTimeTest;
+            mapSize_ = config.mapSize;
+            wanderRadius_ = config.wanderRadius;
+            timeCheck_ = config.timeCheck;
+#endif
+
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;            
         }
         private void Start()
@@ -67,8 +105,8 @@ namespace TrackingBots
 
             Time.timeScale = scaleTimeInTest;
 
-            InvokeRepeating("ActualiceGrid", 0.5f, timeCheck);
-            Invoke("EndTestByTime", maxTimeTest);
+            InvokeRepeating("ActualiceGrid", 0.5f, timeCheck_);
+            Invoke("EndTestByTime", maxTimeTest_);
         }
 
         private void OnDisable()
@@ -124,7 +162,7 @@ namespace TrackingBots
                     eventParams.Clear();
 
                     TrackerG5.Tracker.Instance.Init(TrackerG5.Tracker.serializeType.Json, TrackerG5.Tracker.persistenceType.Disc);
-                    eventParams.Add("nBots", nBots.ToString());
+                    eventParams.Add("nBots", nBots_.ToString());
                     TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.StartTest, eventParams);
                     Debug.Log("Test iniciado");
                 }
@@ -175,20 +213,20 @@ namespace TrackingBots
         void CreateGridMap()
         {
             int numGrids = (9 + precisionLevel);
-            float sizeGrid = mapSize / numGrids;
+            float sizeGrid = mapSize_ / numGrids;
 
             achievableGrid = new List<AchievableGrid>();
 
             float x, z;
-            x = spawnPoint.position.x - mapSize / 2 + sizeGrid / 2;
-            z = spawnPoint.position.z - mapSize / 2 + sizeGrid / 2;
+            x = spawnPoint.position.x - mapSize_ / 2 + sizeGrid / 2;
+            z = spawnPoint.position.z - mapSize_ / 2 + sizeGrid / 2;
 
             // j = x i = z
             for (int i = 0; i < numGrids; i++)
             {
                 for (int j = 0; j < numGrids; j++)
                 {
-                    if (Physics.CheckBox(new Vector3(x, 0, z), new Vector3(sizeGrid / 2, maxHeightOfTheMap, sizeGrid / 2), Quaternion.identity, terrainMask))
+                    if (Physics.CheckBox(new Vector3(x, 0, z), new Vector3(sizeGrid / 2, maxHeightOfTheMap_, sizeGrid / 2), Quaternion.identity, terrainMask))
                     {
                         AchievableGrid grid = new AchievableGrid();
                         grid.SetParams(x - sizeGrid / 2, x + sizeGrid / 2, z - sizeGrid / 2, z + sizeGrid / 2);
@@ -198,7 +236,7 @@ namespace TrackingBots
                     x += sizeGrid;
                 }
 
-                x = spawnPoint.position.x - mapSize / 2 + sizeGrid / 2;
+                x = spawnPoint.position.x - mapSize_ / 2 + sizeGrid / 2;
                 z += sizeGrid;
             }
 
@@ -213,13 +251,13 @@ namespace TrackingBots
         {
             bots = new List<Transform>();
 
-            for (int i = 0; i < nBots; i++)
+            for (int i = 0; i < nBots_; i++)
             {
                 Vector3 positionToSpawn;
                 RaycastHit hit;
                 do
                 {
-                    Physics.Raycast(new Vector3(spawnPoint.position.x + UnityEngine.Random.Range(-maxDispersionBots / 4, maxDispersionBots / 4), maxHeightOfTheMap, spawnPoint.position.z + UnityEngine.Random.Range(-maxDispersionBots / 4, maxDispersionBots / 4)),
+                    Physics.Raycast(new Vector3(spawnPoint.position.x + UnityEngine.Random.Range(-maxDispersionBots_ / 4, maxDispersionBots_ / 4), maxHeightOfTheMap_, spawnPoint.position.z + UnityEngine.Random.Range(-maxDispersionBots_ / 4, maxDispersionBots_ / 4)),
                         Vector3.down, out hit, Mathf.Infinity, terrainMask);
                 } while (hit.collider == null);
 
@@ -250,7 +288,7 @@ namespace TrackingBots
 
 
             //modificaciones para normal o salto
-            gO.GetComponent<WanderBot>().SetParams(wanderRadius, wanderRandomRelative, this);
+            gO.GetComponent<WanderBot>().SetParams(wanderRadius_, wanderRandomRelative, this);
             var bTracker = gO.GetComponent<BotTracker>();
             bTracker.Controller = this;
             UnityEditor.EditorUtility.SetDirty(bTracker);

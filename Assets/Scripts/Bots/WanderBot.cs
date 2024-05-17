@@ -106,8 +106,8 @@ namespace TrackingBots
 
             //codigo del mapa
             /*
-            Vector2 pointOnMap = new Vector2(Random.Range(transform.position.x - wanderRadius, transform.position.x + wanderRadius),
-                  Random.Range(transform.position.z - wanderRadius, transform.position.z + wanderRadius));
+            Vector2 pointOnMap = new Vector2(Random.Range(transform.position.x - wanderRadius_, transform.position.x + wanderRadius_),
+                  Random.Range(transform.position.z - wanderRadius_, transform.position.z + wanderRadius_));
 
             currTargetPos = mapGenerator.GetGlobalPosition(pointOnMap);
             currTargetPos.y += targetYOffset;

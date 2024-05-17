@@ -56,7 +56,7 @@ namespace TrackingBots
             GUILayout.Label("Sistema de métrica de recorrido", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Bold, fontSize = 14 });
             EditorGUILayout.PropertyField(serializedObject.FindProperty("mapSize"), new GUIContent("Tamaño del mapa"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("precisionLevel"), new GUIContent("Precisión del mapeado"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("timeCheck"), new GUIContent("Tiendo de actualización del espacio recorrido"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("timeCheck"), new GUIContent("Tiempo de actualización del espacio recorrido"));
 
             EditorGUILayout.Space();
             EditorGUILayout.Space();
@@ -64,6 +64,8 @@ namespace TrackingBots
             GUILayout.Label("Visualización", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Bold, fontSize = 14 });
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("visualBot"), new GUIContent("Estética de los bots"));
+
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("json"), new GUIContent("JSON"));
 
             EditorGUILayout.Space();
             EditorGUILayout.Space();
