@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using TrackerG5;
 using UnityEditor;
 using UnityEngine;
+using System.IO;
+using UnityEngine.Playables;
 
 namespace TrackingBots
 {
@@ -48,7 +50,7 @@ namespace TrackingBots
         Dictionary<string, string> eventParams = new Dictionary<string, string>();
 
         [SerializeField] bool testEnable = false;
-        [SerializeField] TextAsset json;
+        //[SerializeField] TextAsset json;
 
         public bool TestEnable{ get { return testEnable; } }
         public LayerMask TerrainMask { get { return terrainMask; } }
@@ -72,15 +74,8 @@ namespace TrackingBots
 #if UNITY_EDITOR
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
 #else
-            Config config = new Config();
-            config = JsonUtility.FromJson<Config>(json.text);
-            nBots = config.nBots;
-            maxDispersionBots = config.maxDispersionBots;
-            maxHeightOfTheMap = config.maxHeightOfTheMap;
-            maxTimeTest = config.maxTimeTest;
-            mapSize = config.mapSize;
-            wanderRadius = config.wanderRadius;
-            timeCheck = config.timeCheck;
+            LoadParameters();
+            
 #endif
         }
         private void Start()
@@ -97,6 +92,21 @@ namespace TrackingBots
 
             InvokeRepeating("ActualiceGrid", 0.5f, timeCheck);
             Invoke("EndTestByTime", maxTimeTest);
+        }
+        void LoadParameters()
+        {
+            string filePath = Path.Combine(Application.streamingAssetsPath, "config.json");
+            string jsonContent = File.ReadAllText(filePath);
+
+            Config config = new Config();
+            config = JsonUtility.FromJson<Config>(jsonContent);
+            nBots = config.nBots;
+            maxDispersionBots = config.maxDispersionBots;
+            maxHeightOfTheMap = config.maxHeightOfTheMap;
+            maxTimeTest = config.maxTimeTest;
+            mapSize = config.mapSize;
+            wanderRadius = config.wanderRadius;
+            timeCheck = config.timeCheck;
         }
         void CallTrackerStart()
         {
@@ -155,7 +165,10 @@ namespace TrackingBots
             }
         }
 
-        
+        private void Update()
+        {
+            LoadParameters();
+        }
         private void OnDestroy()
         {
             CancelInvoke();
@@ -211,7 +224,9 @@ namespace TrackingBots
 
         public void GenerateBots()
         {
-
+#if UNITY_EDITOR
+            LoadParameters();
+#endif
             if (transform.childCount != 0)
             {
                 for (int i = 0; i < transform.childCount; i++)
