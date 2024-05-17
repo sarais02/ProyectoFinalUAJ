@@ -9,12 +9,16 @@ namespace TrackingBots
 
         [Header("Wander")]
         [SerializeField] float wanderRadius = 50f;
-        [SerializeField] float targetYOffset = 0.5f;
         [SerializeField][Range(1, 3)] float wanderRandomRelative = 5;
+
+
+        [SerializeField] float randomForceMagnitude = 2f; // Magnitud de la fuerza aleatoria
+        [SerializeField] float randomForceFrequency = 0.5f; // Frecuencia con la que se aplica la fuerza aleatoria
+        private Vector2 randomForce;
+
 
         [Header("Other Forces")]
         [SerializeField] float gravity = 15f;
-        Vector3 gravV3;
 
         [Header("Debug Help")]
         [SerializeField] GameObject beaconPrefab;
@@ -26,7 +30,7 @@ namespace TrackingBots
 
         float movSpeed;
 
-        [SerializeField] CalculateNavigableAreaController controller;
+        [HideInInspector]public CalculateNavigableAreaController controller;
 
 
         float minDistInOneSec = 2f;
@@ -45,12 +49,9 @@ namespace TrackingBots
                 return;
 
             rb = GetComponent<Rigidbody>();
-            gravV3 = new Vector3(0f, -gravity, 0f);
 
-            InvokeRepeating(nameof(GenerateNewPosition), 0f, 4f);
-
-
-
+            GenerateNewPosition();
+            ResetInvokeForce();
         }
 
 
@@ -63,8 +64,10 @@ namespace TrackingBots
             Vector2 targetVel = distance.normalized * movSpeed;
             Vector2 steering = new Vector2(targetVel.x - rb.velocity.x, targetVel.y - rb.velocity.z);
 
-            rb.AddForce(steering.x, 0f, steering.y, ForceMode.Force);
-            rb.AddForce(gravV3, ForceMode.Acceleration);
+            rb.AddForce(steering.x, -gravity, steering.y, ForceMode.Acceleration);
+
+            
+            rb.AddForce(new Vector3(randomForce.x, 0, randomForce.y));
 
             CheckPosition();
         }
@@ -85,15 +88,15 @@ namespace TrackingBots
             if (Vector3.Distance(transform.position, currTargetPos) < 2f)
             {
                 Debug.Log("LLEGADO A DESTINO");
-                ResetInvoke();
+                ResetInvokeForce();
                 GenerateNewPosition();
             }
         }
 
-        void ResetInvoke()
+        void ResetInvokeForce()
         {
-            CancelInvoke(nameof(GenerateNewPosition));
-            InvokeRepeating(nameof(GenerateNewPosition), 0f, 4f);
+            CancelInvoke(nameof(ApplyRandomForce));
+            InvokeRepeating(nameof(ApplyRandomForce), 0f, randomForceFrequency);
         }
 
         void GenerateNewPosition()
@@ -163,10 +166,17 @@ namespace TrackingBots
             if (Vector3.Distance(transform.position, lastPosCheck) < minDistInOneSec)
             {
                 Debug.Log("OBSTACULIZADO");
-                ResetInvoke();
+                ResetInvokeForce();
                 GenerateNewPosition();
             }
             lastPosCheck = transform.position;
+        }
+
+        void ApplyRandomForce()
+        {
+            float randomX = Random.Range(-randomForceMagnitude, randomForceMagnitude);
+            float randomY = Random.Range(-randomForceMagnitude, randomForceMagnitude);
+            randomForce = new Vector2(randomX, randomY);
         }
 
     }
