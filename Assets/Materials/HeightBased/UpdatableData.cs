@@ -12,16 +12,20 @@ public class UpdatableData : ScriptableObject
 	{
 		if (autoUpdate)
 		{
-			// Ejecuta el metodo NotifyOfUpdatedValues despues de que compilen los shaders,
-			// para aplicar los valores
-			UnityEditor.EditorApplication.update += NotifyOfUpdatedValues;
-		}
-	}
+            // Ejecuta el metodo NotifyOfUpdatedValues despues de que compilen los shaders,
+            // para aplicar los valores
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.update += NotifyOfUpdatedValues;
+#endif
+        }
+    }
 
 	public void NotifyOfUpdatedValues()
 	{
-		UnityEditor.EditorApplication.update -= NotifyOfUpdatedValues;
-		if (OnValuesUpdated != null)
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.update -= NotifyOfUpdatedValues;
+#endif
+        if (OnValuesUpdated != null)
 		{
 			OnValuesUpdated();
 		}

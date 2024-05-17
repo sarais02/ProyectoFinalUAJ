@@ -33,7 +33,9 @@ public class Chunk
         Material edgesMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
         edges.AddComponent<MeshFilter>();
         edges.AddComponent<MeshRenderer>().material = edgesMaterial;
+#if UNITY_EDITOR
         GameObjectUtility.SetStaticEditorFlags(edges, StaticEditorFlags.BatchingStatic);
+#endif
     }
 
     void createGameObjectChunk(Transform parent)
@@ -87,7 +89,9 @@ public class Chunk
             GenerateTerrainMesh_Minecraft(sizePerBlock);
 
             edges.AddComponent<MeshCollider>();
+#if UNITY_EDITOR
             GameObjectUtility.SetStaticEditorFlags(edges, StaticEditorFlags.BatchingStatic);
+#endif
             floor.AddComponent<MeshCollider>();
         }
         else
@@ -122,9 +126,9 @@ public class Chunk
             floor.AddComponent<MeshCollider>().sharedMesh = collider.sharedMesh;
             
         }
-       
+#if UNITY_EDITOR
         GameObjectUtility.SetStaticEditorFlags(floor, StaticEditorFlags.BatchingStatic);
-
+#endif
         chunk.transform.position = new Vector3(posMap.x * chunkSize * sizePerBlock, 0, -posMap.y * chunkSize * sizePerBlock);
     }
 

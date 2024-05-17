@@ -69,21 +69,19 @@ namespace TrackingBots
         int areasAchieve = 0;
         private void Awake()
         {
-            if (!Application.isEditor)
-            {
-                Config config = new Config();
-                config = JsonUtility.FromJson<Config>(json.text);
-                nBots = config.nBots;
-                maxDispersionBots = config.maxDispersionBots;
-                maxHeightOfTheMap = config.maxHeightOfTheMap;
-                maxTimeTest = config.maxTimeTest;
-                mapSize = config.mapSize;
-                wanderRadius = config.wanderRadius;
-                timeCheck = config.timeCheck;
-               
-            }
+#if UNITY_EDITOR
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-           
+#else
+            Config config = new Config();
+            config = JsonUtility.FromJson<Config>(json.text);
+            nBots = config.nBots;
+            maxDispersionBots = config.maxDispersionBots;
+            maxHeightOfTheMap = config.maxHeightOfTheMap;
+            maxTimeTest = config.maxTimeTest;
+            mapSize = config.mapSize;
+            wanderRadius = config.wanderRadius;
+            timeCheck = config.timeCheck;
+#endif
         }
         private void Start()
         {
@@ -109,10 +107,12 @@ namespace TrackingBots
         void EndTestByTime()
         {
             //para editor
+#if UNITY_EDITOR
             if (Application.isEditor)
             {
                 UnityEditor.EditorApplication.isPlaying = false;
             }
+#endif
             //para ejecutable
         }
 
@@ -129,10 +129,12 @@ namespace TrackingBots
                         //todo recorrido
                         if(areasAchieve == achievableGrid.Count)
                         {
-                            if(Application.isEditor)
+#if UNITY_EDITOR
+                            if (Application.isEditor)
                             {
                                 UnityEditor.EditorApplication.isPlaying = false;
                             }
+#endif
                         }
                     }
                 }
@@ -144,7 +146,7 @@ namespace TrackingBots
         {
             CancelInvoke();
         }
-
+#if UNITY_EDITOR
         private void OnPlayModeStateChanged(PlayModeStateChange state)
         {
             if(testEnable)
@@ -170,18 +172,22 @@ namespace TrackingBots
             }
           
         }
-
+#endif
         public void StartTest()
         {
             testEnable = true;
+#if UNITY_EDITOR
             UnityEditor.EditorUtility.SetDirty(this);
+#endif
 
         }
 
         public void EndTest()
         {
             testEnable = false;
+#if UNITY_EDITOR
             UnityEditor.EditorUtility.SetDirty(this);
+#endif
         }
         void OnApplicationQuit()
         {
@@ -262,8 +268,9 @@ namespace TrackingBots
                 bots.Add(GenerateBot("Bot" + i.ToString(), positionToSpawn).transform);
             }
 
-
+#if UNITY_EDITOR
             UnityEditor.EditorUtility.SetDirty(this);
+#endif
         }
 
         GameObject GenerateBot(string name, Vector3 position)
@@ -287,8 +294,9 @@ namespace TrackingBots
             gO.GetComponent<WanderBot>().SetParams(wanderRadius, wanderRandomRelative, this);
             var bTracker = gO.GetComponent<BotTracker>();
             bTracker.Controller = this;
+#if UNITY_EDITOR
             UnityEditor.EditorUtility.SetDirty(bTracker);
-
+#endif
 
             gO.transform.parent = botsParent;
             gO.transform.position = position + Vector3.up*0.5f;

@@ -6,7 +6,7 @@ using TrackingBots;
 public class Initializer : MonoBehaviour
 {
     [SerializeField] private GameObject generatorObject;
-
+#if UNITY_EDITOR
     private void Start()
     {
         EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
@@ -23,7 +23,7 @@ public class Initializer : MonoBehaviour
             CallMethod("EndTest");
         }
     }
-
+#endif
     private void CallMethod(string methodName)
     {
         if (generatorObject == null)

@@ -78,7 +78,9 @@ namespace TrackingBots
             this.wanderRadius = wanderRadius;
             wanderRandomRelative = wanderRelative;
             this.controller = controller;
+#if UNITY_EDITOR
             UnityEditor.EditorUtility.SetDirty(this);
+#endif
         }
 
         void CheckPosition()
