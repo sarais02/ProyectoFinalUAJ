@@ -211,16 +211,17 @@ namespace TrackingBots
 
         public void GenerateBots()
         {
-            //Config config = new Config();
-            //config = JsonUtility.FromJson<Config>(json.text);
-            //nBots = config.nBots;
-            //maxDispersionBots = config.maxDispersionBots;
-            //maxHeightOfTheMap = config.maxHeightOfTheMap;
-            //maxTimeTest = config.maxTimeTest;
-            //mapSize = config.mapSize;
-            //wanderRadius = config.wanderRadius;
-            //timeCheck = config.timeCheck;
-            
+#if !UNITY_EDITOR
+            Config config = new Config();
+            config = JsonUtility.FromJson<Config>(json.text);
+            nBots = config.nBots;
+            maxDispersionBots = config.maxDispersionBots;
+            maxHeightOfTheMap = config.maxHeightOfTheMap;
+            maxTimeTest = config.maxTimeTest;
+            mapSize = config.mapSize;
+            wanderRadius = config.wanderRadius;
+            timeCheck = config.timeCheck;
+#endif
             if (transform.childCount != 0)
             {
                 for (int i = 0; i < transform.childCount; i++)

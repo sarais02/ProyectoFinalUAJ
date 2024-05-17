@@ -87,7 +87,8 @@ namespace TrackingBots
            
             if (GUILayout.Button("Finalizar test"))
             {
-                controller.EndTest();
+                if (Application.isEditor && !Application.isPlaying)
+                    controller.EndTest();
             }
 
             EditorGUILayout.Space();
