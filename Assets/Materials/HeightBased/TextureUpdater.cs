@@ -11,6 +11,12 @@ public class TextureUpdater : MonoBehaviour
     [SerializeField]
     Material terrainMaterial;
 
+    private void Awake()
+    {
+#if !UNITY_EDITOR
+        OnTextureValuesUpdated();
+#endif
+    }
 
     // Se ejecuta cada vez que se modifica algo en el inspector de este script
     private void OnValidate()

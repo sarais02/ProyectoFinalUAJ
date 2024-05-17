@@ -121,7 +121,7 @@ public class MapGenerator : MonoBehaviour
     private void Awake()
     {
 #if !UNITY_EDITOR
-        if (!Application.isEditor) GenerateMap();
+        GenerateMap();
 #endif
         clean = true;
         if (GetComponent<EndlessTerrain>() != null && !GetComponent<EndlessTerrain>().enabled)

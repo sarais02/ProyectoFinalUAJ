@@ -85,12 +85,12 @@ namespace TrackingBots
         }
         private void Start()
         {
-            if (!Application.isEditor)
-            {
-                //Si es una build genero bots automaticamente y empiezo el test
-                GenerateBots();
-                StartTest();
-            }
+#if !UNITY_EDITOR
+            //Si es una build genero bots automaticamente y empiezo el test
+            GenerateBots();
+            CallTrackerStart();
+#endif
+
             CreateGridMap();
 
             Time.timeScale = scaleTimeInTest;
@@ -98,7 +98,21 @@ namespace TrackingBots
             InvokeRepeating("ActualiceGrid", 0.5f, timeCheck);
             Invoke("EndTestByTime", maxTimeTest);
         }
+        void CallTrackerStart()
+        {
+            TrackerG5.Tracker.Instance.Init(TrackerG5.Tracker.serializeType.Json, TrackerG5.Tracker.persistenceType.Disc);
+            eventParams.Add("nBots", nBots.ToString());
+            TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.StartTest, eventParams);
+            Debug.Log("Test iniciado");
+        }
 
+        void CallTrackerEnd()
+        {
+            TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.EndTest);
+            TrackerG5.Tracker.Instance.End();
+            Debug.Log("Test finalizado");
+
+        }
         private void OnDisable()
         {
             CancelInvoke();
@@ -191,11 +205,22 @@ namespace TrackingBots
         }
         void OnApplicationQuit()
         {
-           EndTest();
+            EndTest();
+            CancelInvoke();
         }
 
         public void GenerateBots()
         {
+            //Config config = new Config();
+            //config = JsonUtility.FromJson<Config>(json.text);
+            //nBots = config.nBots;
+            //maxDispersionBots = config.maxDispersionBots;
+            //maxHeightOfTheMap = config.maxHeightOfTheMap;
+            //maxTimeTest = config.maxTimeTest;
+            //mapSize = config.mapSize;
+            //wanderRadius = config.wanderRadius;
+            //timeCheck = config.timeCheck;
+            
             if (transform.childCount != 0)
             {
                 for (int i = 0; i < transform.childCount; i++)
