@@ -11,7 +11,7 @@ namespace TrackingBots
         [SerializeField] float wanderRadius = 50f;
         [SerializeField][Range(1, 3)] float wanderRandomRelative = 5;
 
-
+        [Header("Random Forces")]
         [SerializeField] float randomForceMagnitude = 2f; // Magnitud de la fuerza aleatoria
         [SerializeField] float randomForceFrequency = 0.5f; // Frecuencia con la que se aplica la fuerza aleatoria
         private Vector2 randomForce;
@@ -20,12 +20,8 @@ namespace TrackingBots
         [Header("Other Forces")]
         [SerializeField] float gravity = 15f;
 
-        [Header("Debug Help")]
-        [SerializeField] GameObject beaconPrefab;
-
         Vector3 currTargetPos;
         Vector3 lastTargetPos;
-        GameObject aux;
         Rigidbody rb;
 
         float movSpeed;
@@ -116,12 +112,6 @@ namespace TrackingBots
             */
             currTargetPos = GetPos();
             Debug.Log(currTargetPos);
-
-            if (beaconPrefab != null)
-            {
-                GameObject.Destroy(aux); //QUITAR
-                aux = Instantiate(beaconPrefab, currTargetPos, Quaternion.identity); //QUITAR
-            }
 
             CancelInvoke(nameof(CheckMovedInOneSec));
             InvokeRepeating(nameof(CheckMovedInOneSec), distCheckRefreshSecs, distCheckRefreshSecs);
