@@ -32,11 +32,8 @@ namespace TrackingBots
 
         [SerializeField] float maxDispersionBots, maxHeightOfTheMap;
         //variables relacionadas con el tipo de movimiento
-        public MoveType moveType;
 
-        [SerializeField] float distanceMove, jumpingForce;
-
-       public enum MoveType { normal, jumping }
+        [SerializeField] float distanceMove;
 
         //para el movimiento normal
         [SerializeField] float wanderRadius;
@@ -118,6 +115,10 @@ namespace TrackingBots
 
         void CallTrackerEnd()
         {
+
+            eventParams.Clear();
+            eventParams.Add("mapAchieve", ((areasAchieve / (float)achievableGrid.Count) * 100).ToString());
+
             TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.EndTest);
             TrackerG5.Tracker.Instance.End();
             Debug.Log("Test finalizado");
@@ -189,6 +190,10 @@ namespace TrackingBots
                 }
                 else if (state == PlayModeStateChange.ExitingPlayMode)
                 {
+
+                    eventParams.Clear();
+                    eventParams.Add("mapAchieve", ((areasAchieve / (float)achievableGrid.Count) * 100).ToString());
+
                     TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.EndTest);
                     TrackerG5.Tracker.Instance.End();
                     Debug.Log("Test finalizado");

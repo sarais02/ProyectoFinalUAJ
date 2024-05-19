@@ -39,18 +39,11 @@ namespace TrackingBots
             EditorGUILayout.Space();
             GUILayout.Label("Movimiento de los bots", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Bold, fontSize = 14 });
 
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("moveType"), new GUIContent("Tipo de movimiento de los bots"));
 
-            if (controller.moveType == CalculateNavigableAreaController.MoveType.normal)
-            {
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("wanderRadius"), new GUIContent("Amplitud de movimiento"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("wanderRandomRelative"), new GUIContent("Desviación media"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("colliderMat"), new GUIContent("Material físico de los bots"));
-            }
-            else if (controller.moveType == CalculateNavigableAreaController.MoveType.jumping)
-            {
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("jumpingForce"), new GUIContent("Fuerza de salto"));
-            }
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("wanderRadius"), new GUIContent("Amplitud de movimiento"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("wanderRandomRelative"), new GUIContent("Desviación media"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("colliderMat"), new GUIContent("Material físico de los bots"));
+
 
             EditorGUILayout.Space();
             GUILayout.Label("Sistema de métrica de recorrido", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Bold, fontSize = 14 });
@@ -84,7 +77,7 @@ namespace TrackingBots
             {
                 controller.StartTest();
             }
-           
+
             if (GUILayout.Button("Finalizar test"))
             {
                 if (Application.isEditor && !Application.isPlaying)
@@ -95,7 +88,7 @@ namespace TrackingBots
 
             if (controller.TestEnable)
             {
-                GUILayout.Label("TESTS EN MARCHA!", new GUIStyle(GUI.skin.label) 
+                GUILayout.Label("TESTS EN MARCHA!", new GUIStyle(GUI.skin.label)
                 { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold, fontSize = 14 });
             }
             else
