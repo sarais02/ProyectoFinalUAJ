@@ -1,5 +1,5 @@
 {
-    "nBots":"40",
+    "nBots":"1",
     "maxTimeTest":"3600",
     "maxDispersionBots":"50",
     "maxHeightOfTheMap":"100",
