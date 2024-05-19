@@ -80,7 +80,9 @@ namespace TrackingBots
 #if !UNITY_EDITOR
             //Si es una build genero bots automaticamente y empiezo el test
             GenerateBots();
+            StartTest();
             CallTrackerStart();
+            
 #endif
 
             CreateGridMap();
@@ -168,7 +170,7 @@ namespace TrackingBots
 
         private void Update()
         {
-            LoadParameters();
+            //LoadParameters();
         }
         private void OnDestroy()
         {
