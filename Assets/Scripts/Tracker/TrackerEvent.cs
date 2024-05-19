@@ -14,28 +14,12 @@ namespace TrackerG5
             get { return id; }
             set { id = value; }
         }
-
-        string idUser;
-        public string IdUser
-        {
-            get { return idUser; }
-            set { idUser = value; }
-        }
-
         string idSession;
         public string IdSession
         {
             get { return idSession; }
             set { idSession = value; }
         }
-
-        uint idLevel;
-        public uint IdLevel
-        {
-            get { return idLevel; }
-            set { idLevel = value; }
-        }
-
         long timestamp;
         public long Timestamp
         {

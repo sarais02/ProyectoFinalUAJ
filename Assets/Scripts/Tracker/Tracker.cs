@@ -72,7 +72,6 @@ namespace TrackerG5
             }
 
             e.Id = CreateHashID(idUser + DateTime.Now.ToString());
-            e.IdUser = idUser;
             e.IdSession = idSession;
             e.Timestamp = (DateTime.Now.Ticks - new DateTime(1970, 1, 1).Ticks) / TimeSpan.TicksPerMillisecond;
 
@@ -121,7 +120,6 @@ namespace TrackerG5
 
             LoginEvent e = new LoginEvent();
             e.Id = CreateHashID(idUser + DateTime.Now.ToString());
-            e.IdUser = idUser;
             e.IdSession = idSession;
             e.Timestamp = (DateTime.Now.Ticks - new DateTime(1970, 1, 1).Ticks) / TimeSpan.TicksPerMillisecond;
 
@@ -133,7 +131,6 @@ namespace TrackerG5
             //evento de fin de inicio de sesion
             LogoutEvent e = new LogoutEvent();
             e.Id = CreateHashID(idUser + DateTime.Now.ToString());
-            e.IdUser = idUser;
             e.IdSession = idSession;
             e.Timestamp = (DateTime.Now.Ticks - new DateTime(1970, 1, 1).Ticks) / TimeSpan.TicksPerMillisecond;
 

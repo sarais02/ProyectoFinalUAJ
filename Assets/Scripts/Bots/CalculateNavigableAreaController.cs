@@ -194,7 +194,7 @@ namespace TrackingBots
                     eventParams.Clear();
                     eventParams.Add("mapAchieve", ((areasAchieve / (float)achievableGrid.Count) * 100).ToString());
 
-                    TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.EndTest);
+                    TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.EndTest, eventParams);
                     TrackerG5.Tracker.Instance.End();
                     Debug.Log("Test finalizado");
 

@@ -8,7 +8,6 @@ namespace Assets.Scripts.TRACKERG5
 {
     internal class YamlSerializer : ISerializer
     {
-        string old_IdUser = "";
         string old_IdSession = "";
 
         public string Serialize(TrackerEvent e)
@@ -25,14 +24,6 @@ namespace Assets.Scripts.TRACKERG5
                 .Where(p => p.Name == "IdUser" || p.Name == "IdSession" || p.Name == "Id") // Seleccionar IdUsuario e IdSession primero
                 .Concat(otherProp) // Concatenar el resto de las propiedades
                 .ToArray();
-
-            if (old_IdUser != e.IdUser)
-            { //ID DE USUARIO
-                csvBuilder.AppendLine($"- IdUser: {e.IdUser}");
-                old_IdUser = e.IdUser;
-
-                csvBuilder.AppendLine("  Sessions:");
-            }
 
             if (old_IdSession != e.IdSession) //ID DE SESSION
             {
