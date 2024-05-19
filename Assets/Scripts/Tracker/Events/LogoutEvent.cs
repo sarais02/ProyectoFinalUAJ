@@ -4,7 +4,7 @@ namespace TrackerG5
 {
     [Serializable]
 
-    internal class LogoutEvent: TrackerEvent
+    internal class LogoutEvent : TrackerEvent
     {
         public LogoutEvent()
             : base()

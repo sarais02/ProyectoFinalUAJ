@@ -5,9 +5,9 @@ namespace TrackerG5
 {
     [Serializable]
     internal class TrackerEvent
-    { 
+    {
         protected string typeEvent;
-        
+
         string id;
         public string Id
         {

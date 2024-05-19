@@ -10,7 +10,7 @@ namespace TrackerG5
         ISerializer mySerializer;
         FileStream fs;
         uint maxSizeQueue;
-        public FilePersistence(ISerializer serializer,string route, uint maxSizeQueue)
+        public FilePersistence(ISerializer serializer, string route, uint maxSizeQueue)
         {
             this.maxSizeQueue = maxSizeQueue;
             mySerializer = serializer;
@@ -33,7 +33,8 @@ namespace TrackerG5
 
         public void Flush()
         {
-            foreach (var item in eventsQueue){
+            foreach (var item in eventsQueue)
+            {
                 byte[] data = Encoding.UTF8.GetBytes(mySerializer.Serialize(item));
                 fs.Write(data, 0, data.Length);
             }
@@ -43,7 +44,7 @@ namespace TrackerG5
             mySerializer.EndFile(fs);
             fs.Close();
         }
-        
+
         public void EndSession()
         {
             Flush();

@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEditor;
-using System;
 using TrackingBots;
 
+// Esta clase no se usa ya que fue creado para las primeras pruebas de la herramienta
 public class Initializer : MonoBehaviour
 {
     [SerializeField] private GameObject generatorObject;
@@ -46,7 +46,7 @@ public class Initializer : MonoBehaviour
                     Debug.LogError($"Error al invocar el metodo");
                 }
             }
-    
+
         }
     }
 }

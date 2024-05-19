@@ -6,7 +6,7 @@ using TrackerG5;
 
 namespace Assets.Scripts.TRACKERG5
 {
-    internal class YamlSerializer: ISerializer
+    internal class YamlSerializer : ISerializer
     {
         string old_IdUser = "";
         string old_IdSession = "";
@@ -16,7 +16,7 @@ namespace Assets.Scripts.TRACKERG5
             StringBuilder csvBuilder = new StringBuilder();
 
             PropertyInfo[] properties = e.GetType().GetProperties();
-            
+
             // Obtener todas las propiedades excepto IdUsuario e IdSession
             var otherProp = properties.Where(p => p.Name != "IdUser" && p.Name != "IdSession" && p.Name != "Id").ToArray();
 
@@ -26,17 +26,18 @@ namespace Assets.Scripts.TRACKERG5
                 .Concat(otherProp) // Concatenar el resto de las propiedades
                 .ToArray();
 
-            if (old_IdUser != e.IdUser) { //ID DE USUARIO
+            if (old_IdUser != e.IdUser)
+            { //ID DE USUARIO
                 csvBuilder.AppendLine($"- IdUser: {e.IdUser}");
                 old_IdUser = e.IdUser;
 
                 csvBuilder.AppendLine("  Sessions:");
             }
 
-            if(old_IdSession != e.IdSession) //ID DE SESSION
+            if (old_IdSession != e.IdSession) //ID DE SESSION
             {
                 csvBuilder.AppendLine($"  - IdSession: {e.IdSession}");
-                old_IdSession= e.IdSession;
+                old_IdSession = e.IdSession;
                 csvBuilder.AppendLine("    Events:");
             }
 

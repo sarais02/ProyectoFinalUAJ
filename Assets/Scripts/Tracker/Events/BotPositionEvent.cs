@@ -21,8 +21,8 @@ namespace TrackerG5
         public override bool SetParamns(Dictionary<string, string> paramns)
         {
             base.SetParamns(paramns);
-           
-            if(!paramns.ContainsKey("posX") || !float.TryParse(paramns["posX"], out posX) 
+
+            if (!paramns.ContainsKey("posX") || !float.TryParse(paramns["posX"], out posX)
                 || !paramns.ContainsKey("updateByMove") || !paramns.ContainsKey("posZ")
                 || !float.TryParse(paramns["posZ"], out posZ))
                 return false;

@@ -3,7 +3,7 @@
 namespace TrackerG5
 {
     [Serializable]
-    internal class LoginEvent: TrackerEvent
+    internal class LoginEvent : TrackerEvent
     {
         public LoginEvent()
             : base()

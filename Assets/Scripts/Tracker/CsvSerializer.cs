@@ -30,15 +30,15 @@ namespace TrackerG5
                 PropertyInfo[] properties = new TrackerEvent().GetType().GetProperties();
                 foreach (PropertyInfo property in properties)
                 {
-                    csvProperties += property.Name+",";
+                    csvProperties += property.Name + ",";
                 }
-                
+
                 csvProperties += "EventType\n";
 
                 byte[] data = Encoding.UTF8.GetBytes(csvProperties);
                 fs.Write(data, 0, data.Length);
             }
-            
+
             fs.Seek(0, SeekOrigin.End);
         }
 
