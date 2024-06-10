@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using TrackerG5;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
-using UnityEngine.Playables;
+
 
 namespace TrackingBots
 {
@@ -47,7 +45,6 @@ namespace TrackingBots
         Dictionary<string, string> eventParams = new Dictionary<string, string>();
 
         [SerializeField] bool testEnable = false;
-        //[SerializeField] TextAsset json;
 
         public bool TestEnable{ get { return testEnable; } }
         public LayerMask TerrainMask { get { return terrainMask; } }
@@ -61,8 +58,6 @@ namespace TrackingBots
         [SerializeField] uint maxTimeTest = 3600;
 
         [SerializeField] List<Transform> bots;
-
-        //List<AchievableGrid> achievableGrid;
 
 
         int areasAchieve = 0;
@@ -85,11 +80,7 @@ namespace TrackingBots
             
 #endif
 
-            //CreateGridMap();
-
             Time.timeScale = scaleTimeInTest;
-
-            InvokeRepeating("ActualiceGrid", 0.5f, timeCheck);
             Invoke("EndTestByTime", maxTimeTest);
         }
         void LoadParameters()
@@ -119,7 +110,6 @@ namespace TrackingBots
         {
 
             eventParams.Clear();
-            //eventParams.Add("mapAchieve", ((areasAchieve / (float)achievableGrid.Count) * 100).ToString());
 
             TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.EndTest);
             TrackerG5.Tracker.Instance.End();
@@ -143,30 +133,6 @@ namespace TrackingBots
             //para ejecutable
         }
 
-//        void ActualiceGrid()
-//        {
-//            foreach (var grid in achievableGrid)
-//            {
-//                if (!grid.Achieve)
-//                {
-//                    if (grid.CheckBots(bots))
-//                    {
-//                        areasAchieve++;
-                        
-//                        //todo recorrido
-//                        if(areasAchieve == achievableGrid.Count)
-//                        {
-//#if UNITY_EDITOR
-//                            if (Application.isEditor)
-//                            {
-//                                UnityEditor.EditorApplication.isPlaying = false;
-//                            }
-//#endif
-//                        }
-//                    }
-//                }
-//            }
-//        }
 
         private void Update()
         {
@@ -194,17 +160,12 @@ namespace TrackingBots
                 {
 
                     eventParams.Clear();
-                    //eventParams.Add("mapAchieve", ((areasAchieve / (float)achievableGrid.Count) * 100).ToString());
 
                     TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.EndTest, eventParams);
                     TrackerG5.Tracker.Instance.End();
                     Debug.Log("Test finalizado");
-
-                   
-                    //Debug.Log("Porcentaje de mapa alcanzado: " + (areasAchieve / (float)achievableGrid.Count) * 100 + "%");
                 }
             }
-          
         }
 #endif
         public void StartTest()
@@ -249,38 +210,6 @@ namespace TrackingBots
             SpawnBots();
 
         }
-
-        //void CreateGridMap()
-        //{
-        //    int numGrids = (9 + precisionLevel);
-        //    float sizeGrid = mapSize / numGrids;
-
-        //    achievableGrid = new List<AchievableGrid>();
-
-        //    float x, z;
-        //    x = spawnPoint.position.x - mapSize / 2 + sizeGrid / 2;
-        //    z = spawnPoint.position.z - mapSize / 2 + sizeGrid / 2;
-
-        //    // j = x i = z
-        //    for (int i = 0; i < numGrids; i++)
-        //    {
-        //        for (int j = 0; j < numGrids; j++)
-        //        {
-        //            if (Physics.CheckBox(new Vector3(x, 0, z), new Vector3(sizeGrid / 2, maxHeightOfTheMap, sizeGrid / 2), Quaternion.identity, terrainMask))
-        //            {
-        //                AchievableGrid grid = new AchievableGrid();
-        //                grid.SetParams(x - sizeGrid / 2, x + sizeGrid / 2, z - sizeGrid / 2, z + sizeGrid / 2);
-        //                achievableGrid.Add(grid);
-        //            }
-
-        //            x += sizeGrid;
-        //        }
-
-        //        x = spawnPoint.position.x - mapSize / 2 + sizeGrid / 2;
-        //        z += sizeGrid;
-        //    }
-
-        //}
 
         public void SessionInfo(out CalculateNavigableAreaController controller)
         {
