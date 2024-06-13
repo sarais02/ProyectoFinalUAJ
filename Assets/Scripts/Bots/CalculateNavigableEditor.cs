@@ -28,7 +28,7 @@ namespace TrackingBots
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("nBots"), new GUIContent("Numero de Bots"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("scaleTimeInTest"), new GUIContent("Velocidad del juego durante el test"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("maxTimeTest"), new GUIContent("Máxima duración del test (en segundos)"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("maxTimeTest"), new GUIContent("Duración del test (en segundos)"));
 
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("spawnPoint"), new GUIContent("Posición central de la generación de los bots"));
@@ -43,13 +43,6 @@ namespace TrackingBots
             EditorGUILayout.PropertyField(serializedObject.FindProperty("wanderRadius"), new GUIContent("Amplitud de movimiento"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("wanderRandomRelative"), new GUIContent("Desviación media"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("colliderMat"), new GUIContent("Material físico de los bots"));
-
-
-            EditorGUILayout.Space();
-            GUILayout.Label("Sistema de métrica de recorrido", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleLeft, fontStyle = FontStyle.Bold, fontSize = 14 });
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("mapSize"), new GUIContent("Tamaño del mapa"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("precisionLevel"), new GUIContent("Precisión del mapeado"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("timeCheck"), new GUIContent("Tiempo de actualización del espacio recorrido"));
 
             EditorGUILayout.Space();
             EditorGUILayout.Space();
@@ -98,7 +91,6 @@ namespace TrackingBots
                 { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold, fontSize = 14 });
 
             }
-
 
             serializedObject.ApplyModifiedProperties();
 

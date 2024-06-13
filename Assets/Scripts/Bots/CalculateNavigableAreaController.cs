@@ -14,8 +14,6 @@ namespace TrackingBots
         public uint maxTimeTest;
         public float maxDispersionBots, maxHeightOfTheMap;
         public float wanderRadius;
-        public float mapSize;
-        public float timeCheck;
     }
     public class CalculateNavigableAreaController : MonoBehaviour
     {
@@ -46,15 +44,11 @@ namespace TrackingBots
 
         [SerializeField] bool testEnable = false;
 
-        public bool TestEnable{ get { return testEnable; } }
+        public bool TestEnable { get { return testEnable; } }
         public LayerMask TerrainMask { get { return terrainMask; } }
         public float MaxHeightOfTheMap { get { return maxHeightOfTheMap; } }
 
-        [SerializeField] float mapSize = 10;
-        [SerializeField][Range(1, 10)] int precisionLevel = 1;
-        [SerializeField] float timeCheck = 1;
-
-        [SerializeField][Range(0.5f,5)] float scaleTimeInTest = 1;
+        [SerializeField][Range(0.5f, 5)] float scaleTimeInTest = 1;
         [SerializeField] uint maxTimeTest = 3600;
 
         [SerializeField] List<Transform> bots;
@@ -69,6 +63,7 @@ namespace TrackingBots
             LoadParameters();
             
 #endif
+          
         }
         private void Start()
         {
@@ -79,9 +74,11 @@ namespace TrackingBots
             CallTrackerStart();
             
 #endif
-
+            scaleTimeInTest = Math.Max(scaleTimeInTest, 0.1f);
             Time.timeScale = scaleTimeInTest;
-            Invoke("EndTestByTime", maxTimeTest);
+
+
+            Invoke("EndTestByTime", maxTimeTest / scaleTimeInTest);
         }
         void LoadParameters()
         {
@@ -94,9 +91,7 @@ namespace TrackingBots
             maxDispersionBots = config.maxDispersionBots;
             maxHeightOfTheMap = config.maxHeightOfTheMap;
             maxTimeTest = config.maxTimeTest;
-            mapSize = config.mapSize;
             wanderRadius = config.wanderRadius;
-            timeCheck = config.timeCheck;
         }
         void CallTrackerStart()
         {
@@ -123,21 +118,17 @@ namespace TrackingBots
 
         void EndTestByTime()
         {
-            //para editor
 #if UNITY_EDITOR
-            if (Application.isEditor)
-            {
-                UnityEditor.EditorApplication.isPlaying = false;
-            }
-#endif
+            //para editor
+
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
             //para ejecutable
+           
+            Application.Quit();
+#endif
         }
 
-
-        private void Update()
-        {
-            //LoadParameters();
-        }
         private void OnDestroy()
         {
             CancelInvoke();
@@ -145,7 +136,7 @@ namespace TrackingBots
 #if UNITY_EDITOR
         private void OnPlayModeStateChanged(PlayModeStateChange state)
         {
-            if(testEnable)
+            if (testEnable)
             {
                 if (state == PlayModeStateChange.EnteredPlayMode)
                 {
@@ -192,9 +183,6 @@ namespace TrackingBots
 
         public void GenerateBots()
         {
-//#if UNITY_EDITOR
-//            LoadParameters();
-//#endif
             if (transform.childCount != 0)
             {
                 for (int i = 0; i < transform.childCount; i++)
@@ -249,7 +237,7 @@ namespace TrackingBots
             bBody.constraints = RigidbodyConstraints.FreezeRotationY;
             var bColl = gO.GetComponent<SphereCollider>();
             bColl.material = colliderMat;
-           
+
 
             if (visualBot != null)
             {
@@ -266,7 +254,7 @@ namespace TrackingBots
 #endif
 
             gO.transform.parent = botsParent;
-            gO.transform.position = position + Vector3.up*0.5f;
+            gO.transform.position = position + Vector3.up * 0.5f;
             return gO;
         }
     }
