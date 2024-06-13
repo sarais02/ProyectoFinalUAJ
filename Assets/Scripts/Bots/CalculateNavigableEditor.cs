@@ -66,9 +66,13 @@ namespace TrackingBots
             EditorGUILayout.Space();
             EditorGUILayout.Space();
 
+
+            GUILayout.Label("Se deben de activar y desactivar los tests fuera de ejecución",
+                new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold, fontSize = 8 });
             if (GUILayout.Button("Iniciar test"))
             {
-                controller.StartTest();
+                if (Application.isEditor && !Application.isPlaying)
+                    controller.StartTest();
             }
 
             if (GUILayout.Button("Finalizar test"))
