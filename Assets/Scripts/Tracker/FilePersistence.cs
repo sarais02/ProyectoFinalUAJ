@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace TrackerG5
 {
@@ -8,15 +8,35 @@ namespace TrackerG5
     {
         List<TrackerEvent> eventsQueue = new List<TrackerEvent>();
         ISerializer mySerializer;
-        FileStream fs;
+        StreamWriter writer;
         uint maxSizeQueue;
+
         public FilePersistence(ISerializer serializer, string route, uint maxSizeQueue)
         {
             this.maxSizeQueue = maxSizeQueue;
             mySerializer = serializer;
 
-            fs = new FileStream(route, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            mySerializer.OpenFile(fs);
+            createFileStream(route);
+        }
+
+        private bool createFileStream(string route)
+        {
+            try
+            {
+                string directory = Path.GetDirectoryName(route);
+
+                if (!Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+
+                writer = new StreamWriter(route);
+                writer.Write(mySerializer.OpenFile());
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Error en la creación del archivo", ex);
+            }
+
         }
 
         public void Send(TrackerEvent e)
@@ -33,16 +53,32 @@ namespace TrackerG5
 
         public void Flush()
         {
+            if (WriterClosed(writer))
+                return;
+
             foreach (var item in eventsQueue)
             {
-                byte[] data = Encoding.UTF8.GetBytes(mySerializer.Serialize(item));
-                fs.Write(data, 0, data.Length);
+                writer.Write(mySerializer.Serialize(item));
             }
         }
+
+        private bool WriterClosed(StreamWriter writer)
+        {
+            try
+            {
+                var stream = writer.BaseStream;
+                return false;
+            }
+            catch (ObjectDisposedException)
+            {
+                return true;
+            }
+        }
+
         void closeFile()
         {
-            mySerializer.EndFile(fs);
-            fs.Close();
+            writer.Write(mySerializer.EndFile());
+            writer.Close();
         }
 
         public void EndSession()

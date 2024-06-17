@@ -1,7 +1,8 @@
 ﻿using Assets.Scripts.TRACKERG5;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
+using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -12,8 +13,6 @@ namespace TrackerG5
         private static Tracker instance;
         string idUser;
         string idSession;
-        string projectPath;
-        string idUserNameLocation;
         string resultLocation = "";
 
         const int size = 7;
@@ -40,13 +39,27 @@ namespace TrackerG5
 
         private string GetUserID()
         {
+            string machineName = Environment.MachineName;
+            string macAddress = GetMacAddress();
+            string nameUser = machineName + macAddress;
 
-            if (!File.Exists(idUserNameLocation))
-            {
-                File.WriteAllText(idUserNameLocation, CreateHashID(DateTime.Now.ToString() + new Random().Next()));
-            }
+            SHA256 sha256 = SHA256.Create();
+            byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(nameUser));
 
-            return File.ReadAllText(idUserNameLocation);
+            return new Guid(hashBytes.Take(16).ToArray()).ToString("N");
+        }
+        private string GetMacAddress()
+        {
+            string macAddress = NetworkInterface
+                .GetAllNetworkInterfaces()
+                .Where(nic => nic.OperationalStatus == OperationalStatus.Up)
+                .Select(nic => nic.GetPhysicalAddress().ToString())
+                .FirstOrDefault();
+
+            if (string.IsNullOrEmpty(macAddress))
+                macAddress = "00:00:00:00:00:00";
+
+            return macAddress;
         }
 
 
@@ -71,38 +84,37 @@ namespace TrackerG5
                     break;
             }
 
-            e.Id = CreateHashID(idUser + DateTime.Now.ToString());
+            e.Id = CreateHashID(idUser + getTimeStamp());
+            e.IdUser = idUser;
             e.IdSession = idSession;
-            e.Timestamp = (DateTime.Now.Ticks - new DateTime(1970, 1, 1).Ticks) / TimeSpan.TicksPerMillisecond;
+            e.Timestamp = getTimeStamp();
+            e.SetParamns(eventParameters);
 
-            if (e.SetParamns(eventParameters))
-                persistence.Send(e);
+            persistence.Send(e);
 
         }
 
         public void Init(serializeType sT, persistenceType pT)
         {
-            projectPath = Directory.GetCurrentDirectory();
-            idUserNameLocation = Path.Combine(projectPath, "Assets/Scripts/Tracker/Data/ID_USER_TRACKER");
             idUser = GetUserID();
-            idSession = CreateHashID(idUser + DateTime.Now.ToString() + "tracker");
+            idSession = CreateHashID(idUser + getTimeStamp());
 
-            Console.WriteLine("USER ID: " + idUser + " SESSION ID: " + idSession);
+            resultLocation  = "./DataTracker/Result" + getTimeStamp();
+
             //evento de inicio de sesion
-
             switch (sT)
             {
                 case serializeType.Json:
                     serializer = new JsonSerializer();
-                    resultLocation = Path.Combine(projectPath, "Assets/Scripts/Tracker/Data/RESULT.json");
+                    resultLocation += ".json";
                     break;
                 case serializeType.Csv:
                     serializer = new CsvSerializer();
-                    resultLocation = Path.Combine(projectPath, "Assets/Scripts/Tracker/Data/RESULT.csv");
+                    resultLocation += ".csv";
                     break;
                 case serializeType.Yaml:
                     serializer = new YamlSerializer();
-                    resultLocation = Path.Combine(projectPath, "Assets/Scripts/Tracker/Data/RESULT.yaml");
+                    resultLocation += ".yaml";
                     break;
                 default:
                     throw new Exception("Serializacion no valida");
@@ -119,9 +131,10 @@ namespace TrackerG5
             };
 
             LoginEvent e = new LoginEvent();
-            e.Id = CreateHashID(idUser + DateTime.Now.ToString());
+            e.Id = CreateHashID(idUser + getTimeStamp());
+            e.IdUser = idUser;
             e.IdSession = idSession;
-            e.Timestamp = (DateTime.Now.Ticks - new DateTime(1970, 1, 1).Ticks) / TimeSpan.TicksPerMillisecond;
+            e.Timestamp = getTimeStamp();
 
             persistence.Send(e);
         }
@@ -130,9 +143,10 @@ namespace TrackerG5
         {
             //evento de fin de inicio de sesion
             LogoutEvent e = new LogoutEvent();
-            e.Id = CreateHashID(idUser + DateTime.Now.ToString());
+            e.Id = CreateHashID(idUser + getTimeStamp());
+            e.IdUser = idUser;
             e.IdSession = idSession;
-            e.Timestamp = (DateTime.Now.Ticks - new DateTime(1970, 1, 1).Ticks) / TimeSpan.TicksPerMillisecond;
+            e.Timestamp = getTimeStamp();
 
             persistence.Send(e);
 
@@ -152,6 +166,11 @@ namespace TrackerG5
             }
 
             return builder.ToString();
+        }
+
+        private long getTimeStamp()
+        {
+            return DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         }
     }
 }

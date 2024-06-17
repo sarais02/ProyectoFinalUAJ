@@ -1,13 +1,12 @@
-﻿using System.IO;
-
+﻿
 namespace TrackerG5
 {
     internal interface ISerializer
     {
         string Serialize(TrackerEvent e);
 
-        void OpenFile(FileStream fs);
+        string OpenFile();
 
-        void EndFile(FileStream fs);
+        string EndFile();
     }
 }

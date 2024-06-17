@@ -77,7 +77,6 @@ namespace TrackingBots
             scaleTimeInTest = Math.Max(scaleTimeInTest, 0.1f);
             Time.timeScale = scaleTimeInTest;
 
-
             Invoke("EndTestByTime", maxTimeTest / scaleTimeInTest);
         }
         void LoadParameters()
@@ -117,14 +116,10 @@ namespace TrackingBots
         }
 
         void EndTestByTime()
-        {
+        {  
 #if UNITY_EDITOR
-            //para editor
-
             UnityEditor.EditorApplication.isPlaying = false;
 #else
-            //para ejecutable
-           
             Application.Quit();
 #endif
         }
@@ -150,9 +145,7 @@ namespace TrackingBots
                 else if (state == PlayModeStateChange.ExitingPlayMode)
                 {
 
-                    eventParams.Clear();
-
-                    TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.EndTest, eventParams);
+                    TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.EndTest);
                     TrackerG5.Tracker.Instance.End();
                     Debug.Log("Test finalizado");
                 }
@@ -177,6 +170,10 @@ namespace TrackingBots
         }
         void OnApplicationQuit()
         {
+#if !UNITY_EDITOR
+            TrackerG5.Tracker.Instance.AddEvent(TrackerG5.Tracker.eventType.EndTest);
+            TrackerG5.Tracker.Instance.End();
+#endif
             EndTest();
             CancelInvoke();
         }

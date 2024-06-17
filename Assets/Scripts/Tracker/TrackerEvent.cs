@@ -20,6 +20,15 @@ namespace TrackerG5
             get { return idSession; }
             set { idSession = value; }
         }
+
+        string idUser;
+        public string IdUser
+        {
+            get { return idUser; }
+            set { idUser = value; }
+        }
+
+
         long timestamp;
         public long Timestamp
         {
