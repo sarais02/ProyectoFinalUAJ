@@ -14,6 +14,7 @@ namespace TrackingBots
         public uint maxTimeTest;
         public float maxDispersionBots, maxHeightOfTheMap;
         public float wanderRadius;
+        public float scaleTimeInTest;
     }
     public class CalculateNavigableAreaController : MonoBehaviour
     {
@@ -91,6 +92,9 @@ namespace TrackingBots
             maxHeightOfTheMap = config.maxHeightOfTheMap;
             maxTimeTest = config.maxTimeTest;
             wanderRadius = config.wanderRadius;
+            scaleTimeInTest = config.scaleTimeInTest;
+            if (scaleTimeInTest > 5f) scaleTimeInTest = 5f;
+            else if (scaleTimeInTest < 0.5f) scaleTimeInTest = 0.5f;
         }
         void CallTrackerStart()
         {

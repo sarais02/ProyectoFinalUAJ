@@ -3,5 +3,6 @@
     "maxTimeTest":"20",
     "maxDispersionBots":"130",
     "maxHeightOfTheMap":"100",
-    "wanderRadius":"150"
+    "wanderRadius":"150",
+    "scaleTimeInTest":"1.5"
 }
