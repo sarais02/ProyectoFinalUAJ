@@ -53,11 +53,11 @@ namespace TrackerG5
 
         public void Flush()
         {
-            if (WriterClosed(writer))
-                return;
-
             foreach (var item in eventsQueue)
             {
+                if (WriterClosed(writer))
+                    return;
+
                 writer.Write(mySerializer.Serialize(item));
             }
         }
