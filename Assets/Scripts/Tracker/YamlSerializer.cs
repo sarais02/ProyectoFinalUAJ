@@ -48,12 +48,12 @@ namespace Assets.Scripts.TRACKERG5
 
             return csvBuilder.ToString();
         }
-        public string OpenFile()
+        public string OpenText()
         {
             return " ";
         }
 
-        public string EndFile()
+        public string EndText()
         {
             return " ";
         }

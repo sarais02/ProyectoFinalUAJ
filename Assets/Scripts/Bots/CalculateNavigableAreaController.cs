@@ -38,7 +38,7 @@ namespace TrackingBots
         [SerializeField] PhysicMaterial colliderMat;
 
 
-        //vairables internas
+        //variables internas
         Transform botsParent;
 
         Dictionary<string, string> eventParams = new Dictionary<string, string>();
@@ -54,8 +54,6 @@ namespace TrackingBots
 
         [SerializeField] List<Transform> bots;
 
-
-        int areasAchieve = 0;
         private void Awake()
         {
 #if UNITY_EDITOR
@@ -245,8 +243,7 @@ namespace TrackingBots
                 Instantiate<GameObject>(visualBot, gO.transform);
             }
 
-
-            //modificaciones para normal o salto
+           
             gO.GetComponent<WanderBot>().SetParams(wanderRadius, wanderRandomRelative, this);
             var bTracker = gO.GetComponent<BotTracker>();
             bTracker.Controller = this;

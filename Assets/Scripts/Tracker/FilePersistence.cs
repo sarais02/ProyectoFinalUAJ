@@ -29,7 +29,7 @@ namespace TrackerG5
                     Directory.CreateDirectory(directory);
 
                 writer = new StreamWriter(route);
-                writer.Write(mySerializer.OpenFile());
+                writer.Write(mySerializer.OpenText());
                 return true;
             }
             catch (Exception ex)
@@ -77,7 +77,7 @@ namespace TrackerG5
 
         void closeFile()
         {
-            writer.Write(mySerializer.EndFile());
+            writer.Write(mySerializer.EndText());
             writer.Close();
         }
 

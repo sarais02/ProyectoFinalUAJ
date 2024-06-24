@@ -5,8 +5,8 @@ namespace TrackerG5
     {
         string Serialize(TrackerEvent e);
 
-        string OpenFile();
+        string OpenText();
 
-        string EndFile();
+        string EndText();
     }
 }

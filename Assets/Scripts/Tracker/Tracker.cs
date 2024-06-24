@@ -24,6 +24,7 @@ namespace TrackerG5
         public enum persistenceType { Disc };
         public enum eventType { BotPosition, StartTest, EndTest };
 
+        bool sessionClosed = false;
         Tracker() { }
         public static Tracker Instance
         {
@@ -65,6 +66,8 @@ namespace TrackerG5
 
         public void AddEvent(eventType eventT, Dictionary<string, string> eventParameters = null)
         {
+            if (sessionClosed)
+                return;
 
             TrackerEvent e = null;
             switch (eventT)
@@ -141,6 +144,9 @@ namespace TrackerG5
 
         public void End()
         {
+
+            sessionClosed = true;
+
             //evento de fin de inicio de sesion
             LogoutEvent e = new LogoutEvent();
             e.Id = CreateHashID(idUser + getTimeStamp());

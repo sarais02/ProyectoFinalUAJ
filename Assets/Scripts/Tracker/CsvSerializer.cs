@@ -16,7 +16,7 @@ namespace TrackerG5
             csvProperties += e.GetType().Name + '\n';
             return csvProperties;
         }
-        public string OpenFile()
+        public string OpenText()
         {
             string csvProperties = "";
 
@@ -30,7 +30,7 @@ namespace TrackerG5
             return csvProperties;
         }
 
-        public string EndFile()
+        public string EndText()
         {
             return " ";
         }

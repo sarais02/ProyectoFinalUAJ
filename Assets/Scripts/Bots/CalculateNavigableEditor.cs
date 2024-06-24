@@ -51,8 +51,6 @@ namespace TrackingBots
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("visualBot"), new GUIContent("Estética de los bots"));
 
-            //EditorGUILayout.PropertyField(serializedObject.FindProperty("json"), new GUIContent("JSON"));
-
             EditorGUILayout.Space();
             EditorGUILayout.Space();
             EditorGUILayout.Space();

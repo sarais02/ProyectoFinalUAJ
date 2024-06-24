@@ -27,12 +27,12 @@ namespace TrackerG5
 
         }
 
-        public string OpenFile()
+        public string OpenText()
         {
             return "[";
         }
 
-        public string EndFile()
+        public string EndText()
         {
             return "]";
         }
