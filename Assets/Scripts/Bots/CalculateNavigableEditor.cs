@@ -28,7 +28,7 @@ namespace TrackingBots
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("nBots"), new GUIContent("Numero de Bots"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("scaleTimeInTest"), new GUIContent("Velocidad del juego durante el test"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("maxTimeTest"), new GUIContent("Duración del test (en segundos)"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("timeTest"), new GUIContent("Duración del test (en segundos)"));
 
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("spawnPoint"), new GUIContent("Posición central de la generación de los bots"));

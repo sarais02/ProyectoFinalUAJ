@@ -85,7 +85,6 @@ namespace TrackingBots
 
             if (Vector3.Distance(transform.position, currTargetPos) < 2f)
             {
-                Debug.Log("LLEGADO A DESTINO");
                 ResetInvokeForce();
                 GenerateNewPosition();
             }
@@ -103,7 +102,6 @@ namespace TrackingBots
             lastTargetPos = transform.position;
 
             currTargetPos = GetPos();
-            Debug.Log(currTargetPos);
 
             CancelInvoke(nameof(CheckMovedInOneSec));
             InvokeRepeating(nameof(CheckMovedInOneSec), distCheckRefreshSecs, distCheckRefreshSecs);
@@ -141,7 +139,6 @@ namespace TrackingBots
             {
                 transform.position = lastTargetPos;
                 rb.velocity = Vector3.zero;
-                Debug.Log("Reset Position by Falling out of the map");
             }
         }
 
@@ -149,7 +146,6 @@ namespace TrackingBots
         {
             if (Vector3.Distance(transform.position, lastPosCheck) < minDistInOneSec)
             {
-                Debug.Log("OBSTACULIZADO");
                 ResetInvokeForce();
                 GenerateNewPosition();
             }
