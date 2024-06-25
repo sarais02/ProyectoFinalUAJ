@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
-using UnityEditor.Experimental.GraphView;
 
 
 namespace TrackingBots
@@ -84,7 +83,7 @@ namespace TrackingBots
             Time.timeScale = scaleTimeInTest;
 
             //Se llama a finalizar el test dado el tiempo por el usuario y teniendo en cuenta la escala de tiempo 
-            Invoke("EndTestByTime", timeTest / scaleTimeInTest);
+            Invoke("EndTestByTime", timeTest);
         }
 
         //Ajusta el tiempo para que quede dentro d elos valores maximos y minimos
