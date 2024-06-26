@@ -1,9 +1,8 @@
 {
     "nBots":"60",
-    "maxTimeTest":"3600",
+    "maxTimeTest":"20",
     "maxDispersionBots":"130",
     "maxHeightOfTheMap":"100",
     "wanderRadius":"150",
-    "mapSize":"400",
-    "timeCheck":"0.5"
+    "scaleTimeInTest":"1.5"
 }
