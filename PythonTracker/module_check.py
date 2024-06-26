@@ -1,7 +1,7 @@
 import importlib.util
 import sys
 
-modulos = ["os", "json", "pandas", "numpy", "matplotlib"]
+modulos = ["json", "pandas", "numpy", "matplotlib"]
 
 modulos_faltan = []
 

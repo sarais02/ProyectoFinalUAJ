@@ -6,6 +6,7 @@ echo .
 echo Python debe estar instalado en el PATH del sistema. Ten cuidado con accesos directos y alias de Windows.
 echo Debe incluir los módulos json, pandas, numpy y matplotlib.
 echo .
+echo Recuerda que puedes cambiar el nombre del mapa en AnalysisConfig.json y los parámetros en config.json.
 timeout /t 3 /nobreak >nul
 
 REM ----------------------------------------------------------------------------------
@@ -50,7 +51,11 @@ if not exist "%~dp0\DataTracker\" (
 
 REM copiar DataTracker a PythonTracker
 REM Crear DataTracker de destino si no existe
-mkdir "%~dp0\PythonTracker\DataTracker" 2>nul
+if exist "%~dp0\PythonTracker\DataTracker" 2>nul (
+    rmdir /s /q "%~dp0\PythonTracker\DataTracker" 2>nul
+    mkdir "%~dp0\PythonTracker\DataTracker" 2>nul
+)
+
 robocopy "%~dp0\DataTracker" "%~dp0\PythonTracker\DataTracker" /E /NFL /NDL /NJH /NJS /nc /ns /np >nul
 set "copyErrorLevel=%errorlevel%"
 
@@ -64,7 +69,7 @@ if %copyerrorlevel% geq 8 (
 REM ----------------------------------------------------------------------------------
 
 REM Correr script análisis
-%PYTHONPATH% "%~dp0\PythonTracker\analyze.py"
+cd "%~dp0\PythonTracker"
+%PYTHONPATH% "%~dp0\PythonTracker\Analyze_all.py"
 
-pause
-REM exit
+exit
